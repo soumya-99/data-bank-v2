@@ -13,6 +13,7 @@ const mainNavigationRoutes = {
   reportDayScreen: "ReportDayScreen",
   reportTypeScreen: "ReportTypeScreen",
   reportChooseScreen: "ReportChooseScreen",
+  printerConnectScreen: "PrinterConnectScreen",
   notificationScreen: "NotificationScreen",
 }
 

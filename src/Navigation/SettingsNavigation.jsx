@@ -9,6 +9,7 @@ import ReportDay from "../Screens/SettingsScreens/ReportDay"
 import ReportChoose from "../Screens/SettingsScreens/ReportChoose"
 import NotificationScreen from "../Screens/Notification/NotificationScreen"
 import ReportType from "../Screens/SettingsScreens/ReportType"
+import PrintMain from "../Screens/PrintConnectScreen/PrintMain"
 
 const Stack = createNativeStackNavigator()
 
@@ -48,6 +49,11 @@ const SettingsNavigation = () => {
         <Stack.Screen
           name={mainNavigationRoutes.reportChooseScreen}
           component={ReportChoose}
+        />
+
+        <Stack.Screen
+          name={mainNavigationRoutes.printerConnectScreen}
+          component={PrintMain}
         />
 
         <Stack.Screen

@@ -66,6 +66,18 @@ const SettingScreen = ({ navigation }) => {
           {/* label */}
           <Text style={styles.label}> Reports </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(mainNavigationRoutes.printerConnectScreen)
+          }
+          style={styles.cardContainer}>
+          {/* Icon */}
+          {icon.report(COLORS.lightScheme.primary, 45)}
+
+          {/* label */}
+          <Text style={styles.label}> Printer Connect </Text>
+        </TouchableOpacity>
         <View
           style={{
             ...styles.cardContainer,
