@@ -201,8 +201,8 @@ const AccountPreview = ({ navigation, route }) => {
         [30],
         [BluetoothEscposPrinter.ALIGN.LEFT],
         [
-          "Tnx. Date: " +
-            new Date(todayDateFromServer).toLocaleDateString("en-GB"),
+          "Tnx. Datetime: " +
+            new Date(todayDateFromServer).toLocaleDateString("en-GB") + ", " +  new Date(todayDateFromServer).toLocaleTimeString("en-GB")
         ],
         {},
       )
