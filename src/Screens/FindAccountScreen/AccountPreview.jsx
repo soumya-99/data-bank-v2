@@ -17,6 +17,7 @@ import {
   Rows,
   Col,
 } from "react-native-table-component"
+import { BluetoothEscposPrinter } from "react-native-bluetooth-escpos-printer"
 import InputComponent from "../../Components/InputComponent"
 import ButtonComponent from "../../Components/ButtonComponent"
 import axios from "axios"
@@ -25,6 +26,8 @@ import { REACT_APP_BASE_URL } from "../../Config/config"
 import mainNavigationRoutes from "../../Routes/NavigationRoutes"
 import { StackActions } from "@react-navigation/native"
 import { address } from "../../Routes/addresses"
+import { logo } from "../../Resources/ImageStrings/logo"
+// import logoCut from "../../Resources/Images/logo_cut.png"
 
 const AccountPreview = ({ navigation, route }) => {
   const [receiptNumber, setReceiptNumber] = useState(() => "")
@@ -37,6 +40,11 @@ const AccountPreview = ({ navigation, route }) => {
     getTotalDepositAmount,
     totalDepositedAmount,
     todayDateFromServer,
+    agentName,
+    bankName,
+    branchName,
+    totalCollection,
+    login,
   } = useContext(AppStore)
   const { item, money } = route.params
 
@@ -94,6 +102,7 @@ const AccountPreview = ({ navigation, route }) => {
         alert(`Receipt No is ${res.data.receipt_no}`)
         setReceiptNumber(res.data.receipt_no)
         setIsSaveEnabled(false)
+        printReceipt(res.data.receipt_no)
         navigation.dispatch(resetAction)
       })
       .catch(err => {
@@ -107,6 +116,114 @@ const AccountPreview = ({ navigation, route }) => {
           50,
         )
       })
+  }
+
+  async function printReceipt(rcptNo) {
+    try {
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.CENTER,
+      )
+      await BluetoothEscposPrinter.printText("Data Bank", { align: "center" })
+      await BluetoothEscposPrinter.printText("\r\n", {})
+      await BluetoothEscposPrinter.printText(branchName, { align: "center" })
+      await BluetoothEscposPrinter.printText("\r\n", {})
+
+      await BluetoothEscposPrinter.printText("CUSTOMER RECEIPT", {
+        align: "center",
+      })
+
+      await BluetoothEscposPrinter.printText("\r", {})
+
+      // await BluetoothEscposPrinter.printColumn(
+      //   [30],
+      //   [BluetoothEscposPrinter.ALIGN.CENTER],
+      //   ["[LOGO]"],
+      //   {},
+      // )
+
+
+
+      await BluetoothEscposPrinter.printPic(logo, { width: 300, align: "center", left: 30 })
+
+
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------",
+        {},
+      )
+      await BluetoothEscposPrinter.printText("\r\n", {})
+
+      await BluetoothEscposPrinter.printColumn(
+        [30],
+        [BluetoothEscposPrinter.ALIGN.LEFT],
+        ["RCPT. No. : " + rcptNo],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        [30],
+        [BluetoothEscposPrinter.ALIGN.LEFT],
+        ["Acc. No. : " + item?.account_number],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        [30],
+        [BluetoothEscposPrinter.ALIGN.LEFT],
+        ["Name: " + item?.customer_name],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        [30],
+        [BluetoothEscposPrinter.ALIGN.LEFT],
+        ["Previous Bal. : " + item?.current_balance],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        [30],
+        [BluetoothEscposPrinter.ALIGN.LEFT],
+        ["Deposit Amt. : " + money],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        [30],
+        [BluetoothEscposPrinter.ALIGN.LEFT],
+        ["Current Bal. : " + parseFloat(item?.current_balance + parseFloat(money))],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        [30],
+        [BluetoothEscposPrinter.ALIGN.LEFT],
+        [
+          "Tnx. Date: " +
+            new Date(todayDateFromServer).toLocaleDateString("en-GB"),
+        ],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        [30],
+        [BluetoothEscposPrinter.ALIGN.LEFT],
+        ["Collected By (Code) : " + userId],
+        {},
+      )
+
+      // await BluetoothEscposPrinter.printText("\r\n", {})
+
+      // await BluetoothEscposPrinter.printText("\r\n", {})
+      await BluetoothEscposPrinter.printText(
+        "---------------X---------------",
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
+    } catch (e) {
+      alert(e.message || "ERROR")
+    }
   }
 
   const handleSave = () => {
