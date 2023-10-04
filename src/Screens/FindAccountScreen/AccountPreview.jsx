@@ -27,6 +27,8 @@ import mainNavigationRoutes from "../../Routes/NavigationRoutes"
 import { StackActions } from "@react-navigation/native"
 import { address } from "../../Routes/addresses"
 import { logo } from "../../Resources/ImageStrings/logo"
+import { gle } from "../../Resources/ImageStrings/gle"
+import { glej } from "../../Resources/ImageStrings/glej"
 // import logoCut from "../../Resources/Images/logo_cut.png"
 
 const AccountPreview = ({ navigation, route }) => {
@@ -143,7 +145,7 @@ const AccountPreview = ({ navigation, route }) => {
 
 
 
-      await BluetoothEscposPrinter.printPic(logo, { width: 300, align: "center", left: 30 })
+      await BluetoothEscposPrinter.printPic(glej, { width: 300, align: "center", left: 30 })
 
 
 
