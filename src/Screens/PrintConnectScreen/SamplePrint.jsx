@@ -152,7 +152,7 @@ const SamplePrint = () => {
       <Text>Sample Print Instruction</Text>
 
       <View style={styles.btn}>
-        <Button title="Print Receipt" onPress={printreciept} />
+        <Button title="Print Test" onPress={printreciept} />
       </View>
     </View>
   )

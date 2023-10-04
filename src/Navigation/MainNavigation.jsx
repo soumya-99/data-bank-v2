@@ -15,7 +15,7 @@ const MainNavigation = () => {
     <>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {isLogin ? ( // ! bypassed for debugging 
+          {isLogin ? ( // use '!' for bypassing for debugging 
             <>
               <Stack.Screen
                 name={mainNavigationRoutes.tab_home}
