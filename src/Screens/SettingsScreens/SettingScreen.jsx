@@ -73,7 +73,7 @@ const SettingScreen = ({ navigation }) => {
           }
           style={styles.cardContainer}>
           {/* Icon */}
-          {icon.report(COLORS.lightScheme.primary, 45)}
+          {icon.printer(COLORS.lightScheme.primary, 45)}
 
           {/* label */}
           <Text style={styles.label}> Printer Connect </Text>
