@@ -35,21 +35,21 @@ async function printreciept() {
     await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Receipt No: " + receiptNo],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Receipt Date: " + receiptDate],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Original A/C:" + originalAccount],
       {},
@@ -58,28 +58,28 @@ async function printreciept() {
     await BluetoothEscposPrinter.printText("\r\n", {})
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Branch:" + branch],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Telephone:" + telephone],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Salesman:" + salesman],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Product Code:" + productCode],
       {},
@@ -88,28 +88,28 @@ async function printreciept() {
     await BluetoothEscposPrinter.printText("\r\n", {})
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Amount:" + amount + "/="],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Discount:" + discount + "/="],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Amount Received:" + amountReceived + "/="],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Payment Method:" + paymentMethod],
       {},
@@ -118,7 +118,7 @@ async function printreciept() {
     await BluetoothEscposPrinter.printText("\r\n", {})
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Received From:" + receivedFrom],
       {},
@@ -127,14 +127,14 @@ async function printreciept() {
     await BluetoothEscposPrinter.printText("\r\n", {})
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Signature:" + "..................."],
       {},
     )
 
     await BluetoothEscposPrinter.printColumn(
-      [48],
+      [30],
       [BluetoothEscposPrinter.ALIGN.LEFT],
       ["Printed By:" + fcuser],
       {},
