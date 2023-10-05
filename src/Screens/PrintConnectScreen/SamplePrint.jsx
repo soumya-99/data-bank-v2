@@ -142,7 +142,8 @@ async function printreciept() {
 
     await BluetoothEscposPrinter.printText("\r\n", {})
   } catch (e) {
-    alert(e.message || "ERROR")
+    // alert(e.message || "ERROR")
+    alert("Printer is not connected.")
   }
 }
 
@@ -152,7 +153,7 @@ const SamplePrint = () => {
       <Text>Sample Print Instruction</Text>
 
       <View style={styles.btn}>
-        <Button title="Print Test" onPress={printreciept} />
+        <Button title="Test Printer" onPress={printreciept} />
       </View>
     </View>
   )

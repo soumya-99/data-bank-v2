@@ -125,7 +125,7 @@ const AccountPreview = ({ navigation, route }) => {
       await BluetoothEscposPrinter.printerAlign(
         BluetoothEscposPrinter.ALIGN.CENTER,
       )
-      await BluetoothEscposPrinter.printText("Data Bank", { align: "center" })
+      await BluetoothEscposPrinter.printText(bankName, { align: "center" })
       await BluetoothEscposPrinter.printText("\r\n", {})
       await BluetoothEscposPrinter.printText(branchName, { align: "center" })
       await BluetoothEscposPrinter.printText("\r\n", {})
@@ -145,7 +145,7 @@ const AccountPreview = ({ navigation, route }) => {
 
 
 
-      await BluetoothEscposPrinter.printPic(glej, { width: 300, align: "center", left: 30 })
+      // await BluetoothEscposPrinter.printPic(logo, { width: 300, align: "center", left: 30 })
 
 
 
@@ -224,7 +224,7 @@ const AccountPreview = ({ navigation, route }) => {
 
       await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
     } catch (e) {
-      alert(e.message || "ERROR")
+      console.log(e.message || "ERROR")
     }
   }
 

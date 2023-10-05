@@ -83,7 +83,7 @@ const Home = ({ navigation }) => {
       await BluetoothEscposPrinter.printerAlign(
         BluetoothEscposPrinter.ALIGN.CENTER,
       )
-      await BluetoothEscposPrinter.printText("Data Bank", { align: "center" })
+      await BluetoothEscposPrinter.printText(bankName, { align: "center" })
       await BluetoothEscposPrinter.printText("\r\n", {})
       await BluetoothEscposPrinter.printText(branchName, { align: "center" })
       await BluetoothEscposPrinter.printText("\r\n", {})
@@ -206,7 +206,8 @@ const Home = ({ navigation }) => {
       await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
       // await BluetoothEscposPrinter.printQRCode("Something", 25, 3)
     } catch (e) {
-      alert(e.message || "ERROR")
+      // console.log(e.message || "ERROR")
+      alert("Printer is not connected. Connect it from Settings.")
     }
   }
 

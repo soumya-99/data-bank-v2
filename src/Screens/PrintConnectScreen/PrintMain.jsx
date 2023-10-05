@@ -208,20 +208,20 @@ const PrintMain = () => {
     }
   }
 
-  //   const unPair = (address) => {
-  //     setLoading(true);
-  //     BluetoothManager.unpaire(address).then(
-  //       (s) => {
-  //         setLoading(false);
-  //         setBoundAddress("");
-  //         setName("");
-  //       },
-  //       (e) => {
-  //         setLoading(false);
-  //         alert(e);
-  //       }
-  //     );
-  //   };
+    const unPair = (address) => {
+      setLoading(true);
+      BluetoothManager.unpaire(address).then(
+        (s) => {
+          setLoading(false);
+          setBoundAddress("");
+          setName("");
+        },
+        (e) => {
+          setLoading(false);
+          alert(e);
+        }
+      );
+    };
 
   const scanDevices = useCallback(() => {
     setLoading(true)
@@ -322,9 +322,10 @@ const PrintMain = () => {
           label={name}
           value={boundAddress}
           onPress={() => {
-            console.log("disconnect false")
+            // console.log("disconnect false")
+            unPair(boundAddress)
           }}
-          actionText="Disconnect"
+          actionText="Unpair"
           color="#E9493F"
         />
       )}
@@ -353,7 +354,7 @@ const PrintMain = () => {
         })}
       </View>
       <SamplePrint />
-      <Button onPress={() => scanBluetoothDevice()} title="Scan Bluetooth" />
+      <Button onPress={() => scanBluetoothDevice()} title="Scan / Connect" />
       <View style={{ height: 100 }} />
     </ScrollView>
   )
