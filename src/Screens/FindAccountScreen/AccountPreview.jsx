@@ -225,6 +225,13 @@ const AccountPreview = ({ navigation, route }) => {
       await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
     } catch (e) {
       console.log(e.message || "ERROR")
+      ToastAndroid.showWithGravityAndOffset(
+        "Printer not connected.",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+        25,
+        50,
+      )
     }
   }
 
