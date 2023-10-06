@@ -12,7 +12,7 @@ import {
   BluetoothEscposPrinter,
 } from "react-native-bluetooth-escpos-printer"
 
-import { Table, Rows } from "react-native-table-component"
+import { Table, Rows, Row } from "react-native-table-component"
 import { COLORS, colors } from "../../Resources/colors"
 import CustomHeader from "../../Components/CustomHeader"
 import { AppStore } from "../../Context/AppContext"
@@ -40,8 +40,12 @@ const Home = ({ navigation }) => {
     return () => clearInterval(timer)
   }, [])
 
+  let bank = [
+    [bankName]
+  ]
+
   let tableData = [
-    ["Bank", bankName],
+    // ["Bank", bankName],
     ["Branch", branchName],
     ["Agent Code", userId],
     ["Agent Name", agentName],
@@ -195,16 +199,17 @@ const Home = ({ navigation }) => {
               style={{
                 backgroundColor: COLORS.lightScheme.background,
               }}>
+              <Row data={bank} textStyle={styles.bnk} />
               <Rows data={tableData} textStyle={styles.text} />
             </Table>
           </ScrollView>
-          <View style={styles.printAgent}>
+          {/* <View style={styles.printAgent}>
             <Button
               title="Print"
               color={COLORS.lightScheme.tertiary}
               onPress={printAgentInfo}
             />
-          </View>
+          </View> */}
         </View>
       </View>
     </>
@@ -219,6 +224,12 @@ const styles = StyleSheet.create({
     margin: 6,
     color: COLORS.lightScheme.onTertiaryContainer,
     fontWeight: "400",
+    fontSize: 18,
+  },
+  bnk: {
+    margin: 6,
+    color: COLORS.lightScheme.onTertiaryContainer,
+    fontWeight: "900",
     fontSize: 18,
   },
   logoContainer: {
