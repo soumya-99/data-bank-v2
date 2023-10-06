@@ -15,11 +15,14 @@ import { Table, Rows, Row } from "react-native-table-component"
 import axios from "axios"
 import { address } from "../../Routes/addresses"
 import { useEffect } from "react"
+import { ActivityIndicator } from "react-native"
 
 const NonCollection = () => {
   const { userId, bankId, branchCode } = useContext(AppStore)
 
   const [nonCollectionReport, setNonCollectionReport] = useState(() => [])
+
+  const [loading, setLoading] = useState(() => true)
 
   const tableHead = ["Sl No.", "A/c No.", "Name", "Phone"]
   let tableData = nonCollectionReport
@@ -49,6 +52,7 @@ const NonCollection = () => {
         })
         console.log("++++++ TABLE DATA ++++++++", tableData)
         setNonCollectionReport(tableData)
+        setLoading(false)
       })
       .catch(err => {
         ToastAndroid.showWithGravityAndOffset(
@@ -90,7 +94,11 @@ const NonCollection = () => {
               }}
               style={{ backgroundColor: COLORS.lightScheme.background }}>
               <Row data={tableHead} textStyle={styles.head} />
-              <Rows data={tableData} textStyle={styles.text} />
+              {loading ? (
+                <ActivityIndicator animating={true} />
+              ) : (
+                <Rows data={tableData} textStyle={styles.text} />
+              )}
             </Table>
           )}
         </ScrollView>
