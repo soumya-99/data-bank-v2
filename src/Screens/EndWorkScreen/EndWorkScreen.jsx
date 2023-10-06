@@ -91,6 +91,7 @@ const EndWorkScreen = ({ navigation }) => {
         setEndScreenPassword("")
       } else {
         alert("Invalid Password")
+        setEndScreenPassword("")
       }
     } catch (error) {
       console.log(error)
@@ -127,7 +128,7 @@ const EndWorkScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <CustomHeader />
 
-      <View>
+      <View style={styles.container}>
         <View
           style={{
             padding: 10,

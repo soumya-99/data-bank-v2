@@ -335,7 +335,10 @@ const PrintMain = () => {
         </Text>
       )}
       <Text style={styles.sectionTitle}>
-        Bluetooth connected to this cellphone:
+        Bluetooth connected to this phone:
+      </Text>
+      <Text style={styles.sectionSub}>
+      (If not, pair it from your bluetooth)
       </Text>
       {loading ? <ActivityIndicator animating={true} /> : null}
       <View style={styles.containerList}>
@@ -394,4 +397,5 @@ const styles = StyleSheet.create({
     color: "#E9493F",
     marginBottom: 20,
   },
+  sectionSub: { fontSize: 15, marginBottom: 5 },
 })

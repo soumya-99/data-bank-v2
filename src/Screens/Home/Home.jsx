@@ -8,7 +8,9 @@ import {
 } from "react-native"
 import { StackActions, useFocusEffect } from "@react-navigation/native"
 import { useState, useEffect, useContext, useCallback } from "react"
-import { BluetoothEscposPrinter, BluetoothTscPrinter } from "react-native-bluetooth-escpos-printer"
+import {
+  BluetoothEscposPrinter,
+} from "react-native-bluetooth-escpos-printer"
 
 import { Table, Rows } from "react-native-table-component"
 import { COLORS, colors } from "../../Resources/colors"
@@ -88,28 +90,33 @@ const Home = ({ navigation }) => {
       await BluetoothEscposPrinter.printText(branchName, { align: "center" })
       await BluetoothEscposPrinter.printText("\r\n", {})
 
-      await BluetoothEscposPrinter.printText("AGENT INFORMATION", { align: "center" })
+      await BluetoothEscposPrinter.printText("AGENT INFORMATION", {
+        align: "center",
+      })
 
-      await BluetoothEscposPrinter.printText("\r\n\r\n", {})
-      await BluetoothEscposPrinter.printText("-------------------------------", {})
+      await BluetoothEscposPrinter.printText("\r", {})
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------",
+        {},
+      )
       await BluetoothEscposPrinter.printText("\r\n", {})
 
       await BluetoothEscposPrinter.printColumn(
-        [48],
+        [30],
         [BluetoothEscposPrinter.ALIGN.LEFT],
         ["Agent Name: " + agentName],
         {},
       )
 
       await BluetoothEscposPrinter.printColumn(
-        [48],
+        [30],
         [BluetoothEscposPrinter.ALIGN.LEFT],
         ["Agent Code: " + userId],
         {},
       )
 
       await BluetoothEscposPrinter.printColumn(
-        [48],
+        [30],
         [BluetoothEscposPrinter.ALIGN.LEFT],
         ["Date: " + currentDateTime.toLocaleDateString("en-GB")],
         {},
@@ -118,90 +125,31 @@ const Home = ({ navigation }) => {
       await BluetoothEscposPrinter.printText("\r\n", {})
 
       await BluetoothEscposPrinter.printColumn(
-        [48],
+        [40],
         [BluetoothEscposPrinter.ALIGN.LEFT],
         ["Total Collection: " + totalCollection + "/-"],
         {},
       )
 
-      // await BluetoothEscposPrinter.printText("\r\n", {})
-      await BluetoothEscposPrinter.printText("---------------X---------------", {})
+      await BluetoothEscposPrinter.printText("\r", {})
 
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Telephone:" + telephone],
-      //   {},
-      // )
+      await BluetoothEscposPrinter.printBarCode(
+        "My String Decode",
+        BluetoothEscposPrinter.BARCODETYPE.JAN13,
+        3,
+        120,
+        0,
+        2,
+      )
+      await BluetoothEscposPrinter.printText("\r", {})
 
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Salesman:" + salesman],
-      //   {},
-      // )
-
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Product Code:" + productCode],
-      //   {},
-      // )
+      // await BluetoothEscposPrinter.printQRCode("My String Decode", 280, BluetoothEscposPrinter.ERROR_CORRECTION.L)
 
       // await BluetoothEscposPrinter.printText("\r\n", {})
-
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Amount:" + amount + "/="],
-      //   {},
-      // )
-
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Discount:" + discount + "/="],
-      //   {},
-      // )
-
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Amount Received:" + amountReceived + "/="],
-      //   {},
-      // )
-
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Payment Method:" + paymentMethod],
-      //   {},
-      // )
-
-      // await BluetoothEscposPrinter.printText("\r\n", {})
-
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Received From:" + receivedFrom],
-      //   {},
-      // )
-
-      // await BluetoothEscposPrinter.printText("\r\n", {})
-
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Signature:" + "..................."],
-      //   {},
-      // )
-
-      // await BluetoothEscposPrinter.printColumn(
-      //   [48],
-      //   [BluetoothEscposPrinter.ALIGN.LEFT],
-      //   ["Printed By:" + fcuser],
-      //   {},
-      // )
+      await BluetoothEscposPrinter.printText(
+        "---------------X---------------",
+        {},
+      )
 
       await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
       // await BluetoothEscposPrinter.printQRCode("Something", 25, 3)
@@ -251,7 +199,11 @@ const Home = ({ navigation }) => {
             </Table>
           </ScrollView>
           <View style={styles.printAgent}>
-            <Button title="Print" onPress={printAgentInfo} />
+            <Button
+              title="Print"
+              color={COLORS.lightScheme.tertiary}
+              onPress={printAgentInfo}
+            />
           </View>
         </View>
       </View>
@@ -306,6 +258,6 @@ const styles = StyleSheet.create({
   },
   printAgent: {
     margin: 5,
-    paddingTop: 3
-  }
+    paddingTop: 3,
+  },
 })

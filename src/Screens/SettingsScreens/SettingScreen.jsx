@@ -78,14 +78,6 @@ const SettingScreen = ({ navigation }) => {
           {/* label */}
           <Text style={styles.label}> Printer Connect </Text>
         </TouchableOpacity>
-        <View
-          style={{
-            ...styles.cardContainer,
-            backgroundColor: COLORS.lightScheme.background,
-            elevation: 0,
-          }}>
-          {/* Blank Card */}
-        </View>
       </View>
     </>
   )
@@ -99,7 +91,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     padding: 10,
     justifyContent: "space-evenly",
-    backgroundColor: COLORS.lightScheme.background,
+    backgroundColor: COLORS.lightScheme.surfaceVarient,
     height: "100%",
   },
   cardContainer: {

@@ -24,7 +24,7 @@ async function printreciept() {
     await BluetoothEscposPrinter.printerAlign(
       BluetoothEscposPrinter.ALIGN.CENTER,
     )
-    await BluetoothEscposPrinter.printText("ABC India PLC", { align: "center" })
+    await BluetoothEscposPrinter.printText("Synergic Softek Solutions Pvt. Ltd.", { align: "center" })
     await BluetoothEscposPrinter.printText("\r\n", {})
 
     await BluetoothEscposPrinter.printText(
@@ -32,7 +32,7 @@ async function printreciept() {
       {},
     )
 
-    await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
+    await BluetoothEscposPrinter.printText("\r", {})
 
     await BluetoothEscposPrinter.printColumn(
       [30],
@@ -55,7 +55,7 @@ async function printreciept() {
       {},
     )
 
-    await BluetoothEscposPrinter.printText("\r\n", {})
+    await BluetoothEscposPrinter.printText("\r", {})
 
     await BluetoothEscposPrinter.printColumn(
       [30],
@@ -85,7 +85,7 @@ async function printreciept() {
       {},
     )
 
-    await BluetoothEscposPrinter.printText("\r\n", {})
+    await BluetoothEscposPrinter.printText("\r", {})
 
     await BluetoothEscposPrinter.printColumn(
       [30],
@@ -115,7 +115,7 @@ async function printreciept() {
       {},
     )
 
-    await BluetoothEscposPrinter.printText("\r\n", {})
+    await BluetoothEscposPrinter.printText("\r", {})
 
     await BluetoothEscposPrinter.printColumn(
       [30],
@@ -124,7 +124,7 @@ async function printreciept() {
       {},
     )
 
-    await BluetoothEscposPrinter.printText("\r\n", {})
+    await BluetoothEscposPrinter.printText("\r", {})
 
     await BluetoothEscposPrinter.printColumn(
       [30],
@@ -140,7 +140,7 @@ async function printreciept() {
       {},
     )
 
-    await BluetoothEscposPrinter.printText("\r\n", {})
+    await BluetoothEscposPrinter.printText("\r\n\r\n", {})
   } catch (e) {
     // alert(e.message || "ERROR")
     alert("Printer is not connected.")
