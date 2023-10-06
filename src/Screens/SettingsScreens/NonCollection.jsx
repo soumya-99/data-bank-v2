@@ -14,6 +14,7 @@ import { COLORS } from "../../Resources/colors"
 import { Table, Rows, Row } from "react-native-table-component"
 import axios from "axios"
 import { address } from "../../Routes/addresses"
+import { useEffect } from "react"
 
 const NonCollection = () => {
   const { userId, bankId, branchCode } = useContext(AppStore)
@@ -61,10 +62,10 @@ const NonCollection = () => {
       })
   }
 
-  const handleSubmit = () => {
+  useEffect(() => {
     tableData = []
     getNonCollectionReport()
-  }
+  }, [])
 
   console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", tableData)
   return (
@@ -79,13 +80,6 @@ const NonCollection = () => {
           borderRadius: 10,
         }}>
         <Text style={styles.todayCollection}>Non Collection Report</Text>
-        <View>
-          <TouchableOpacity
-            onPress={() => handleSubmit()}
-            style={styles.dateButton}>
-            <Text>GET REPORT</Text>
-          </TouchableOpacity>
-        </View>
         <ScrollView>
           {tableData && (
             <Table
