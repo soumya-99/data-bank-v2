@@ -12,6 +12,7 @@ const mainNavigationRoutes = {
   changePinScreen: "ChangePinScreen",
   reportDayScreen: "ReportDayScreen",
   reportTypeScreen: "ReportTypeScreen",
+  nonCollectionReport: "NonCollectionReport",
   reportChooseScreen: "ReportChooseScreen",
   printerConnectScreen: "PrinterConnectScreen",
   notificationScreen: "NotificationScreen",

@@ -38,6 +38,19 @@ export default function ReportChoose({ navigation }) {
           {/* label */}
           <Text style={styles.label}> A/c Type Wise Report </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(mainNavigationRoutes.nonCollectionReport)
+          }
+          style={styles.cardContainer}>
+          {/* Icon */}
+          {icon.password(COLORS.lightScheme.primary, 45)}
+
+          {/* label */}
+          <Text style={styles.label}> Non Collection Report </Text>
+        </TouchableOpacity>
+
         <View
           style={{
             ...styles.cardContainer,

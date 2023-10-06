@@ -12,5 +12,5 @@ export const address = {
     CHANGE_PIN: `${REACT_APP_BASE_URL}/user/change_pin`,
     DAY_SCROLL_REPORT: `${REACT_APP_BASE_URL}/user/day_scroll_report`,
     TYPE_WISE_REPORT: `${REACT_APP_BASE_URL}/user/type_wise_report`,
-    
+    NON_COLLECTON_REPORT: `${REACT_APP_BASE_URL}/user/non_collection_report`,
 }

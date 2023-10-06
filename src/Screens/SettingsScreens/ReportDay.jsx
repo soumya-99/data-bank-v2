@@ -9,7 +9,6 @@ import {
   ToastAndroid,
   Modal,
 } from "react-native"
-import DateTimePickerModal from "react-native-modal-datetime-picker"
 import { AppStore } from "../../Context/AppContext"
 import CustomHeader from "../../Components/CustomHeader"
 import { COLORS, colors } from "../../Resources/colors"
