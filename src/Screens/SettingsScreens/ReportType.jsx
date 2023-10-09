@@ -130,7 +130,7 @@ const ReportType = () => {
         res.data.success.msg.forEach((item, i) => {
           let rowArr = [
             i + 1,
-            item.date.slice(0, 10),
+            new Date(item.date).toLocaleDateString("en-GB"),
             item.account_number,
             item.account_holder_name,
             item.deposit_amount,

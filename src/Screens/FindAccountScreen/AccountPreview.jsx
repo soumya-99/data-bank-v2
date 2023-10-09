@@ -29,6 +29,7 @@ import { address } from "../../Routes/addresses"
 import { logo } from "../../Resources/ImageStrings/logo"
 import { gle } from "../../Resources/ImageStrings/gle"
 import { glej } from "../../Resources/ImageStrings/glej"
+import { Alert } from "react-native"
 // import logoCut from "../../Resources/Images/logo_cut.png"
 
 const AccountPreview = ({ navigation, route }) => {
@@ -101,7 +102,13 @@ const AccountPreview = ({ navigation, route }) => {
       })
       .then(res => {
         console.log("###### Preview: ", res.data)
-        alert(`Receipt No is ${res.data.receipt_no}`)
+        // alert(`Receipt No is ${res.data.receipt_no}`)
+        Alert.alert("Receipt No.", `Receipt No is ${res.data.receipt_no}`, [
+          {
+            text: "Okay",
+            onPress: () => console.log("Receipt generated."),
+          }
+        ])
         setReceiptNumber(res.data.receipt_no)
         setIsSaveEnabled(false)
         printReceipt(res.data.receipt_no)
@@ -216,13 +223,13 @@ const AccountPreview = ({ navigation, route }) => {
       await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
     } catch (e) {
       console.log(e.message || "ERROR")
-      ToastAndroid.showWithGravityAndOffset(
-        "Printer not connected.",
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-        25,
-        50,
-      )
+      // ToastAndroid.showWithGravityAndOffset(
+      //   "Printer not connected.",
+      //   ToastAndroid.SHORT,
+      //   ToastAndroid.CENTER,
+      //   25,
+      //   50,
+      // )
     }
   }
 

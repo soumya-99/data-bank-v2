@@ -204,7 +204,7 @@ const PrintMain = () => {
       console.log("Connected to device:", row)
     } catch (e) {
       setLoading(false)
-      alert(e)
+      // alert(e)
     }
   }
 
@@ -218,7 +218,7 @@ const PrintMain = () => {
         },
         (e) => {
           setLoading(false);
-          alert(e);
+          // alert(e);
         }
       );
     };
