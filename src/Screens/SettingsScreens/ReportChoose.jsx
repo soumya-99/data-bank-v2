@@ -51,6 +51,18 @@ export default function ReportChoose({ navigation }) {
           <Text style={styles.label}> Non Collection Report </Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(mainNavigationRoutes.miniStatement)
+          }
+          style={styles.cardContainer}>
+          {/* Icon */}
+          {icon.profile(COLORS.lightScheme.primary, 45)}
+
+          {/* label */}
+          <Text style={styles.label}> Mini Statement </Text>
+        </TouchableOpacity>
+
         <View
           style={{
             ...styles.cardContainer,

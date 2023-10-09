@@ -136,17 +136,8 @@ const AccountPreview = ({ navigation, route }) => {
 
       await BluetoothEscposPrinter.printText("\r", {})
 
-      // await BluetoothEscposPrinter.printColumn(
-      //   [30],
-      //   [BluetoothEscposPrinter.ALIGN.CENTER],
-      //   ["[LOGO]"],
-      //   {},
-      // )
-
-
 
       // await BluetoothEscposPrinter.printPic(logo, { width: 300, align: "center", left: 30 })
-
 
 
       await BluetoothEscposPrinter.printText(

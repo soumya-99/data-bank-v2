@@ -76,26 +76,28 @@ const AccountDetails = ({ navigation, route }) => {
     })
   }
 
-  const checkHolidayLock = () => {
-    let currentDate = new Date(todayDateFromServer.toISOString().slice(0, 10))
-    console.log("CURRRRR DATEE", currentDate)
-    let modifiedAtDate = new Date(modifiedAt.toISOString().slice(0, 10))
-    console.log("MODDDD DATE", modifiedAtDate)
-    let newModifiedDate = new Date()
+  // const checkHolidayLock = () => {
+  //   let currentDate = new Date(todayDateFromServer.toISOString().slice(0, 10))
+  //   console.log("CURRRRR DATEE", currentDate)
+  //   let modifiedAtDate = new Date(modifiedAt.toISOString().slice(0, 10))
+  //   console.log("MODDDD DATE", modifiedAtDate)
+  //   let newModifiedDate = new Date()
 
-    // let afterAddingHolidayLockDays = modifiedAtDate.getDate() + 1
-    newModifiedDate.setDate(modifiedAtDate.getDate() + holidayLock)
-    console.log(holidayLock)
+  //   // let afterAddingHolidayLockDays = modifiedAtDate.getDate() + 1
+  //   newModifiedDate.setDate(modifiedAtDate.getDate() + holidayLock)
+  //   console.log("HOLIIIIDDDAAAAYYYYY _+++++++>>>", holidayLock)
 
-    return newModifiedDate > currentDate
-  }
+  //   return newModifiedDate >= currentDate
+  // }
 
-  console.log(checkHolidayLock())
+  // console.log("CHECKKK HOLIDAAAY LOCKKK fun()", checkHolidayLock())
 
   const checkIsCollectionEnded = () => {
     if (collectionFlag == "Y" && endFlag == "N") return false
     else if (collectionFlag == "N" && endFlag == "Y") return true
   }
+
+  console.log("CHECKKK COLLL ENDEDDD ========>>>>>", checkIsCollectionEnded())
 
   return (
     <View>
@@ -143,7 +145,7 @@ const AccountDetails = ({ navigation, route }) => {
                 }}
               />
 
-              {checkHolidayLock() || checkIsCollectionEnded() ? (
+              {!checkIsCollectionEnded() ? (
                 <ButtonComponent
                   title={"Preview / Save"}
                   customStyle={{ marginTop: 10, width: "60%" }}

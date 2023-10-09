@@ -11,6 +11,8 @@ import NotificationScreen from "../Screens/Notification/NotificationScreen"
 import ReportType from "../Screens/SettingsScreens/ReportType"
 import PrintMain from "../Screens/PrintConnectScreen/PrintMain"
 import NonCollection from "../Screens/SettingsScreens/NonCollection"
+import MiniStatement from "../Screens/SettingsScreens/MiniStatement"
+import MiniStatementInner from "../Screens/SettingsScreens/MiniStatementInner"
 
 const Stack = createNativeStackNavigator()
 
@@ -51,6 +53,17 @@ const SettingsNavigation = () => {
           name={mainNavigationRoutes.nonCollectionReport}
           component={NonCollection}
         />
+
+        <Stack.Screen
+          name={mainNavigationRoutes.miniStatement}
+          component={MiniStatement}
+        />
+
+        <Stack.Screen
+          name={mainNavigationRoutes.miniStatementInner}
+          component={MiniStatementInner}
+        />
+
         <Stack.Screen
           name={mainNavigationRoutes.reportChooseScreen}
           component={ReportChoose}

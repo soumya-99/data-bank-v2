@@ -73,6 +73,7 @@ const AppContext = ({ children }) => {
         setBranchName(res.data.success.user_data.msg[0].branch_name)
         setBranchCode(res.data.success.user_data.msg[0].branch_code)
         setMaximumAmount(res.data.success.user_data.msg[0].max_amt)
+        setHolidayLock(res.data.success.user_data.msg[0].allow_collection_days)
 
         setTotalCollection(
           res.data.success.total_collection.msg[0].total_collection,
@@ -80,7 +81,6 @@ const AppContext = ({ children }) => {
 
         setReceiptNumber(res.data.success.setting.msg[0].receipt_no)
         setModifiedAt(new Date(res.data.success.setting.msg[0].modified_at))
-        setHolidayLock(res.data.success.setting.msg[0].allow_collection_days)
       })
       .catch(err => {
         console.error("========>>>>>>>>", err.response.data)
