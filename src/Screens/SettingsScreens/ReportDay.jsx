@@ -134,7 +134,7 @@ const ReportDay = () => {
           25,
           50,
         )
-        console.log(err.response.data)
+        console.log(err)
       })
   }
 

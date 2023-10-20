@@ -77,7 +77,7 @@ const ChangePin = () => {
           logout()
         })
         .catch(err => {
-          console.log("CHANGE PINNN SCREENNNN", err.response.data.error)
+          console.log("CHANGE PINNN SCREENNNN", err)
           ToastAndroid.showWithGravityAndOffset(
             err.response.data.error,
             ToastAndroid.SHORT,

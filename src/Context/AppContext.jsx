@@ -113,7 +113,7 @@ const AppContext = ({ children }) => {
           25,
           50,
         )
-        console.error("Error: TTTTIIIMMMEEEEE", err.response.data)
+        console.error("Error: TTTTIIIMMMEEEEE", err)
       })
   }
 
@@ -161,7 +161,7 @@ const AppContext = ({ children }) => {
         console.log("FLAGGGGGSSSS EF: ", res.data.data.msg[0].end_flag)
       })
       .catch(err => {
-        console.log("flags err", err.response.data)
+        console.log("flags err", err)
         ToastAndroid.showWithGravityAndOffset(
           "Error COLLECTION CHECKED",
           ToastAndroid.SHORT,

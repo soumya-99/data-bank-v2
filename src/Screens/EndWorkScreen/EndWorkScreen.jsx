@@ -71,7 +71,7 @@ const EndWorkScreen = ({ navigation }) => {
         setIsButtonEnabled(!isButtonEnabled)
       })
       .catch(err => {
-        console.log("############", err.response.data)
+        console.log("############", err)
         alert("Collection already submitted.")
         ToastAndroid.showWithGravityAndOffset(
           "Collection already submitted.",

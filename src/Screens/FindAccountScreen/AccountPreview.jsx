@@ -115,7 +115,7 @@ const AccountPreview = ({ navigation, route }) => {
         navigation.dispatch(resetAction)
       })
       .catch(err => {
-        console.log(err.response.data)
+        console.log(err)
         alert("Data already submitted. Please upload new dataset.")
         ToastAndroid.showWithGravityAndOffset(
           "Data already submitted. Please upload new dataset.",
