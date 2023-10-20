@@ -23,9 +23,25 @@ const FindAccountScreen = ({ navigation }) => {
     fetchBankDetails()
   }
 
+  const debounce = (func) => {
+    let timer;
+    return function (...args) {
+      const context = this;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = null;
+        func.apply(context, args);
+      }, 2000);
+    };
+  };
+
+  // useEffect(() => {
+  //   handleAccountSearch()
+  //   console.log(userBankDetails)
+  // }, [searchValue])
+
   useEffect(() => {
-    handleAccountSearch()
-    console.log(userBankDetails)
+    debounce(fetchBankDetails)()
   }, [searchValue])
 
   const fetchBankDetails = async () => {
@@ -49,7 +65,8 @@ const FindAccountScreen = ({ navigation }) => {
         setUserBankDetails(res.data.success.msg)
       })
       .catch(err => {
-        console.log(err)
+        setUserBankDetails([])
+        console.log(err.response.data)
       })
   }
 
