@@ -23,8 +23,12 @@ const AppContext = ({ children }) => {
   const [passcode, setPasscode] = useState(() => "")
   const [totalCollection, setTotalCollection] = useState(() => 0)
   const [receiptNumber, setReceiptNumber] = useState(() => 0)
-  const [holidayLock, setHolidayLock] = useState(() => 0)
+  // const [holidayLock, setHolidayLock] = useState(() => 0)
   const [maximumAmount, setMaximumAmount] = useState(() => 0)
+
+  // allow_collection_days
+  const [allowCollectionDays, setAllowCollectionDays] = useState(() => 0)
+  const [secAmtType, setSecAmtType] = useState(() => "")
 
   const [modifiedAt, setModifiedAt] = useState(() => new Date())
   const [todayDateFromServer, setTodayDateFromServer] = useState(
@@ -61,26 +65,42 @@ const AppContext = ({ children }) => {
         },
       })
       .then(res => {
-        setIsLogin(true)
-        console.log("response from server")
-        console.log(res.data, res.status)
-        setId(res.data.success.user_data.msg[0].id)
-        setAgentName(res.data.success.user_data.msg[0].agent_name)
-        setAgentEmail(res.data.success.user_data.msg[0].email_id)
-        setAgentPhoneNumber(res.data.success.user_data.msg[0].phone_no)
-        setBankId(res.data.success.user_data.msg[0].bank_id)
-        setBankName(res.data.success.user_data.msg[0].bank_name)
-        setBranchName(res.data.success.user_data.msg[0].branch_name)
-        setBranchCode(res.data.success.user_data.msg[0].branch_code)
-        setMaximumAmount(res.data.success.user_data.msg[0].max_amt)
-        setHolidayLock(res.data.success.user_data.msg[0].allow_collection_days)
+        if (res.data.status) {
+          setIsLogin(true)
+          console.log("response from server")
+          console.log(res.data, res.status)
+          setId(res.data.success.user_data.msg[0].id)
+          setAgentName(res.data.success.user_data.msg[0].agent_name)
+          setAgentEmail(res.data.success.user_data.msg[0].email_id)
+          setAgentPhoneNumber(res.data.success.user_data.msg[0].phone_no)
+          setBankId(res.data.success.user_data.msg[0].bank_id)
+          setBankName(res.data.success.user_data.msg[0].bank_name)
+          setBranchName(res.data.success.user_data.msg[0].branch_name)
+          setBranchCode(res.data.success.user_data.msg[0].branch_code)
+          setMaximumAmount(res.data.success.user_data.msg[0].max_amt)
+          // setHolidayLock(
+          //   res.data.success.user_data.msg[0].allow_collection_days,
+          // )
+          setAllowCollectionDays(res.data.success.user_data.msg[0].allow_collection_days)
+          setSecAmtType(res.data.success.user_data.msg[0].sec_amt_type)
 
-        setTotalCollection(
-          res.data.success.total_collection.msg[0].total_collection,
-        )
+          setTotalCollection(
+            res.data.success.total_collection.msg[0].total_collection,
+          )
 
-        setReceiptNumber(res.data.success.setting.msg[0].receipt_no)
-        setModifiedAt(new Date(res.data.success.setting.msg[0].modified_at))
+          setReceiptNumber(res.data.success.setting.msg[0].receipt_no)
+          setModifiedAt(new Date(res.data.success.setting.msg[0].modified_at))
+        } else {
+          setIsLogin(false)
+          ToastAndroid.showWithGravityAndOffset(
+            "Invalid Credentials",
+            ToastAndroid.SHORT,
+            ToastAndroid.CENTER,
+            25,
+            50,
+          )
+          setPasscode("")
+        }
       })
       .catch(err => {
         console.error("========>>>>>>>>", err.response.data)
@@ -221,12 +241,14 @@ const AppContext = ({ children }) => {
         maximumAmount,
         totalCollection,
         receiptNumber,
-        holidayLock,
+        // holidayLock,
         modifiedAt,
         todayDateFromServer,
         getFlagsRequest,
         collectionFlag,
         endFlag,
+        allowCollectionDays,
+        secAmtType,
         getTotalDepositAmount,
         totalDepositedAmount,
       }}>

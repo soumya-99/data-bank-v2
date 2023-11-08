@@ -13,6 +13,7 @@ import PrintMain from "../Screens/PrintConnectScreen/PrintMain"
 import NonCollection from "../Screens/SettingsScreens/NonCollection"
 import MiniStatement from "../Screens/SettingsScreens/MiniStatement"
 import MiniStatementInner from "../Screens/SettingsScreens/MiniStatementInner"
+import DateWiseCollSummary from "../Screens/SettingsScreens/DateWiseCollSummary"
 
 const Stack = createNativeStackNavigator()
 
@@ -62,6 +63,11 @@ const SettingsNavigation = () => {
         <Stack.Screen
           name={mainNavigationRoutes.miniStatementInner}
           component={MiniStatementInner}
+        />
+
+        <Stack.Screen
+          name={mainNavigationRoutes.dateWiseCollSummary}
+          component={DateWiseCollSummary}
         />
 
         <Stack.Screen

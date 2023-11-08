@@ -48,6 +48,8 @@ const AccountPreview = ({ navigation, route }) => {
     branchName,
     totalCollection,
     login,
+    allowCollectionDays,
+    secAmtType,
   } = useContext(AppStore)
   const { item, money } = route.params
 
@@ -92,6 +94,8 @@ const AccountPreview = ({ navigation, route }) => {
       total_amount: item?.current_balance + parseFloat(money),
       deposit_amount: parseFloat(money),
       collection_by: id,
+      sec_amt_type: secAmtType,
+      total_collection_amount: totalCollection,
     }
     console.log("===========", obj)
     await axios
@@ -101,18 +105,29 @@ const AccountPreview = ({ navigation, route }) => {
         },
       })
       .then(res => {
-        console.log("###### Preview: ", res.data)
-        // alert(`Receipt No is ${res.data.receipt_no}`)
-        Alert.alert("Receipt No.", `Receipt No is ${res.data.receipt_no}`, [
-          {
-            text: "Okay",
-            onPress: () => console.log("Receipt generated."),
-          }
-        ])
-        setReceiptNumber(res.data.receipt_no)
-        setIsSaveEnabled(false)
-        printReceipt(res.data.receipt_no)
-        navigation.dispatch(resetAction)
+        if (res.data.status) {
+          console.log("###### Preview: ", res.data)
+          // alert(`Receipt No is ${res.data.receipt_no}`)
+          Alert.alert("Receipt No.", `Receipt No is ${res.data.receipt_no}`, [
+            {
+              text: "Okay",
+              onPress: () => console.log("Receipt generated."),
+            },
+          ])
+          setReceiptNumber(res.data.receipt_no)
+          setIsSaveEnabled(false)
+          printReceipt(res.data.receipt_no)
+          navigation.dispatch(resetAction)
+        } else {
+          alert("Data already submitted. Please upload new dataset.")
+          ToastAndroid.showWithGravityAndOffset(
+            "Data already submitted. Please upload new dataset.",
+            ToastAndroid.SHORT,
+            ToastAndroid.CENTER,
+            25,
+            50,
+          )
+        }
       })
       .catch(err => {
         console.log(err)
@@ -137,15 +152,13 @@ const AccountPreview = ({ navigation, route }) => {
       await BluetoothEscposPrinter.printText(branchName, { align: "center" })
       await BluetoothEscposPrinter.printText("\r\n", {})
 
-      await BluetoothEscposPrinter.printText("CUSTOMER RECEIPT", {
+      await BluetoothEscposPrinter.printText("RECEIPT", {
         align: "center",
       })
 
       await BluetoothEscposPrinter.printText("\r", {})
 
-
       // await BluetoothEscposPrinter.printPic(logo, { width: 300, align: "center", left: 30 })
-
 
       await BluetoothEscposPrinter.printText(
         "-------------------------------",
@@ -153,62 +166,133 @@ const AccountPreview = ({ navigation, route }) => {
       )
       await BluetoothEscposPrinter.printText("\r\n", {})
 
-      await BluetoothEscposPrinter.printColumn(
-        [30],
-        [BluetoothEscposPrinter.ALIGN.LEFT],
-        ["RCPT. No. : " + rcptNo],
-        {},
-      )
+      let columnWidths = [11, 1, 18]
 
       await BluetoothEscposPrinter.printColumn(
-        [30],
-        [BluetoothEscposPrinter.ALIGN.LEFT],
-        ["Acc. No. : " + item?.account_number],
-        {},
-      )
-
-      await BluetoothEscposPrinter.printColumn(
-        [30],
-        [BluetoothEscposPrinter.ALIGN.LEFT],
-        ["Name: " + item?.customer_name],
-        {},
-      )
-
-      await BluetoothEscposPrinter.printColumn(
-        [30],
-        [BluetoothEscposPrinter.ALIGN.LEFT],
-        ["Previous Bal. : " + item?.current_balance],
-        {},
-      )
-
-      await BluetoothEscposPrinter.printColumn(
-        [30],
-        [BluetoothEscposPrinter.ALIGN.LEFT],
-        ["Deposit Amt. : " + money],
-        {},
-      )
-
-      await BluetoothEscposPrinter.printColumn(
-        [30],
-        [BluetoothEscposPrinter.ALIGN.LEFT],
-        ["Current Bal. : " + parseFloat(item?.current_balance + parseFloat(money))],
-        {},
-      )
-
-      await BluetoothEscposPrinter.printColumn(
-        [30],
-        [BluetoothEscposPrinter.ALIGN.LEFT],
+        columnWidths,
         [
-          "Tnx. Datetime: " +
-            new Date(todayDateFromServer).toLocaleDateString("en-GB") + ", " +  new Date(todayDateFromServer).toLocaleTimeString("en-GB")
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["AGENT NAME", ":", agentName.toString()],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        [
+          "RCPT DATE",
+          ":",
+          (
+            new Date(todayDateFromServer).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            }) +
+            ", " +
+            new Date(todayDateFromServer).toLocaleTimeString("en-GB", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          ).toString(),
         ],
         {},
       )
 
       await BluetoothEscposPrinter.printColumn(
-        [30],
-        [BluetoothEscposPrinter.ALIGN.LEFT],
-        ["Collected By (Code) : " + userId],
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["RCPT NO", ":", rcptNo.toString()],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["ACC NO", ":", (item?.account_number).toString()],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["NAME", ":", (item?.customer_name).toString()],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["OPEN BAL", ":", (item?.current_balance).toString()],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["COLL AMT", ":", money.toString()],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        [
+          "CLOSE BAL",
+          ":",
+          parseFloat(item?.current_balance + parseFloat(money)).toString(),
+        ],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        columnWidths,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        [
+          "ACC OPN DT",
+          ":",
+          new Date(item?.opening_date)
+            .toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            })
+            .toString(),
+        ],
         {},
       )
 
@@ -235,21 +319,56 @@ const AccountPreview = ({ navigation, route }) => {
 
   const handleSave = () => {
     getTotalDepositAmount()
-    console.log("##$$$$###$$$", maximumAmount, money, totalDepositedAmount)
-    console.log("##$$$$+++++###$$$", money + totalDepositedAmount)
-    console.log("##$$$$+++++###$$$", typeof money, typeof totalDepositedAmount)
-    console.log("##$$$$+++++###$$$", parseFloat(money) + totalDepositedAmount)
-    if (!(maximumAmount < parseFloat(money) + totalDepositedAmount)) {
-      setIsSaveEnabled(true)
-      sendCollectedMoney()
-    } else {
-      ToastAndroid.showWithGravityAndOffset(
-        "Your collection quota has been exceeded.",
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-        25,
-        50,
-      )
+    // console.log("##$$$$###$$$", maximumAmount, money, totalDepositedAmount)
+    // console.log("##$$$$+++++###$$$", money + totalDepositedAmount)
+    // console.log("##$$$$+++++###$$$", typeof money, typeof totalDepositedAmount)
+    // console.log("##$$$$+++++###$$$", parseFloat(money) + totalDepositedAmount)
+
+    if (secAmtType == "M") {
+      console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
+      console.log("TTTTTYYYYYPPPPPEEEEE", maximumAmount)
+      console.log("TTTTTYYYYYPPPPPEEEEE", allowCollectionDays)
+      console.log("##$$$$###$$$", maximumAmount * allowCollectionDays)
+      console.log("##$$$$+++++###$$$", parseFloat(money) + totalDepositedAmount)
+      if (
+        maximumAmount * allowCollectionDays >
+        parseFloat(money) + totalDepositedAmount
+      ) {
+        console.log("MMMMMMMMMMMMMMMM")
+        setIsSaveEnabled(true)
+        sendCollectedMoney()
+      } // M
+      else {
+        ToastAndroid.showWithGravityAndOffset(
+          "Your collection quota has been exceeded.",
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+          25,
+          50,
+        )
+      }
+    } else if (secAmtType == "A") {
+      console.log("AAAAAAAAAAAAAAAAAA")
+
+      console.log("TTTTTYYYYYPPPPPEEEEE", maximumAmount)
+      console.log("TTTTTYYYYYPPPPPEEEEE", allowCollectionDays)
+      console.log("##$$$$###$$$", maximumAmount * allowCollectionDays)
+      console.log("##$$$$+++++###$$$", parseFloat(money) + totalDepositedAmount)
+
+
+      if (maximumAmount > parseFloat(money) + totalDepositedAmount) {
+        setIsSaveEnabled(true)
+        sendCollectedMoney()
+      } // A
+      else {
+        ToastAndroid.showWithGravityAndOffset(
+          "Your collection quota has been exceeded.",
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
+          25,
+          50,
+        )
+      }
     }
   }
 

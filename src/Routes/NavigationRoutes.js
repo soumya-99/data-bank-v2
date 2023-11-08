@@ -15,6 +15,7 @@ const mainNavigationRoutes = {
   nonCollectionReport: "NonCollectionReport",
   miniStatement: "MiniStatement",
   miniStatementInner: "MiniStatementInner",
+  dateWiseCollSummary: "DateWiseCollSummary",
   reportChooseScreen: "ReportChooseScreen",
   printerConnectScreen: "PrinterConnectScreen",
   notificationScreen: "NotificationScreen",

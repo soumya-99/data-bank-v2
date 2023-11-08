@@ -9,24 +9,42 @@ import {
   ToastAndroid,
   Modal,
 } from "react-native"
+import { BluetoothEscposPrinter } from "react-native-bluetooth-escpos-printer"
 import { AppStore } from "../../Context/AppContext"
 import CustomHeader from "../../Components/CustomHeader"
-import { COLORS } from "../../Resources/colors"
-import { Table, Rows, Row, Col } from "react-native-table-component"
+import { COLORS, colors } from "../../Resources/colors"
+import { Table, Rows, Row } from "react-native-table-component"
 import axios from "axios"
 import CalendarPicker from "react-native-calendar-picker"
 import { address } from "../../Routes/addresses"
 
-const MiniStatementInner = ({ route }) => {
-  const { item } = route.params
-
-  const { userId, bankId, branchCode } = useContext(AppStore)
+const DateWiseCollSummary = () => {
+  const {
+    userId,
+    bankId,
+    branchCode,
+    maximumAmount,
+    getTotalDepositAmount,
+    totalDepositedAmount,
+    todayDateFromServer,
+    agentName,
+    bankName,
+    branchName,
+    totalCollection,
+    login,
+    id,
+  } = useContext(AppStore)
 
   const [selectedStartDate, setSelectedStartDate] = useState(() => new Date())
   const [selectedEndDate, setSelectedEndDate] = useState(() => new Date())
+
   const [showModal, setShowModal] = useState(() => false)
-  const [miniStatementArray, setMiniStatementArray] = useState(() => [])
-  const [totalAmount, setTotalAmount] = useState(() => 0)
+
+  const [dtWiseCollSummaryArray, setDtWiseCollSummaryArray] = useState(() => [])
+
+  const [totalReceipts, setTotalReceipts] = useState(() => 0)
+
+  const [total, setTotal] = useState(() => 0)
 
   const startDate = selectedStartDate
     ? selectedStartDate.toISOString().slice(0, 10)
@@ -45,22 +63,21 @@ const MiniStatementInner = ({ route }) => {
     }
   }
 
-  const tableHead = ["Sl No.", "Date", "Deposit", "Balance"]
-  const accountDetailsTable = [[item?.customer_name], [item?.account_number]]
-  let tableData = miniStatementArray
+  const tableHead = ["Sl. No.", "Date", "No. of Receipts", "Collected Amt."]
+  let tableData = dtWiseCollSummaryArray
 
-  const getMiniStatement = async () => {
+  const getReportsDayScroll = async () => {
     const obj = {
       bank_id: bankId,
       branch_code: branchCode,
       agent_code: userId,
-      account_number: item?.account_number,
       from_date: startDate,
       to_date: endDate,
     }
-    let totalDepositedAmount = 0
+    let rcpts = 0
+    let totalAmount = 0
     await axios
-      .post(address.MINI_STATEMENT, obj, {
+      .post(address.DATE_WISE_COLL_SUMMARY, obj, {
         headers: {
           Accept: "application/json",
         },
@@ -69,22 +86,34 @@ const MiniStatementInner = ({ route }) => {
         res.data.success.msg.forEach((item, i) => {
           let rowArr = [
             i + 1,
-            new Date(item.PAID_DT).toLocaleDateString("en-GB", {
+            new Date(item.date).toLocaleDateString("en-GB", {
               day: "2-digit",
               month: "2-digit",
               year: "2-digit",
             }),
-            item.PAID_AMT,
-            item.BALANCE_AMT,
+            item.rcpts,
+            // item.account_type == "D"
+            //   ? "Daily"
+            //   : item.account_type == "R"
+            //   ? "RD"
+            //   : item.account_type == "L"
+            //   ? "Loan"
+            //   : "",
+            // item.account_number,
+            // item.account_holder_name,
+            item.deposit_amount,
           ]
-          totalDepositedAmount += item.PAID_AMT
+          rcpts += item.rcpts
+          setTotalReceipts(rcpts)
+          totalAmount += item.deposit_amount
+          setTotal(totalAmount)
           console.log("ITEMMM TABLEEE=====", rowArr)
           tableData.push(...[rowArr])
         })
 
-        setTotalAmount(totalDepositedAmount)
+        // setTotalAmount(totalAmount)
         console.log("++++++ TABLE DATA ++++++++", tableData)
-        setMiniStatementArray(tableData)
+        setDtWiseCollSummaryArray(tableData)
       })
       .catch(err => {
         ToastAndroid.showWithGravityAndOffset(
@@ -100,10 +129,85 @@ const MiniStatementInner = ({ route }) => {
 
   const handleSubmit = () => {
     tableData = []
-    getMiniStatement()
+    getReportsDayScroll()
   }
 
   console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", tableData)
+
+  async function printReceipt() {
+    try {
+      // await BluetoothEscposPrinter.printerAlign(
+      //   BluetoothEscposPrinter.ALIGN.CENTER,
+      // )
+      await BluetoothEscposPrinter.printText(bankName, { align: "center" })
+      await BluetoothEscposPrinter.printText("\r\n", {})
+      await BluetoothEscposPrinter.printText(branchName, { align: "center" })
+      await BluetoothEscposPrinter.printText("\r\n", {})
+
+      await BluetoothEscposPrinter.printText("SUMMARY REPORT", {
+        align: "center",
+      })
+
+      await BluetoothEscposPrinter.printText("\r", {})
+
+      // await BluetoothEscposPrinter.printPic(logo, { width: 300, align: "center", left: 30 })
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------",
+        {},
+      )
+      await BluetoothEscposPrinter.printText("\r\n", {})
+
+      let columnWidthsHeader = [10, 6, 10]
+      await BluetoothEscposPrinter.printColumn(
+        columnWidthsHeader,
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["Date", "Rcpts", "Coll Amt"],
+        {},
+      )
+
+      let columnWidthsBody = [30]
+      dtWiseCollSummaryArray.forEach(async item => {
+        let newItems = [...item]
+        newItems.shift()
+        let items = newItems.join("      ")
+        console.log("++==++ PRINTED ITEM", items)
+        await BluetoothEscposPrinter.printColumn(
+          columnWidthsBody,
+          [BluetoothEscposPrinter.ALIGN.CENTER],
+          [items.toString()],
+          {},
+        )
+      })
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------\n",
+        {},
+      )
+      await BluetoothEscposPrinter.printText("Total Receipts: " + totalReceipts + "\n", { align: "center" })
+      await BluetoothEscposPrinter.printText("Total Amount: " + total + "\n", { align: "center" })
+      await BluetoothEscposPrinter.printText(
+        "---------------X---------------",
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
+    } catch (e) {
+      console.log(e.message || "ERROR")
+      // ToastAndroid.showWithGravityAndOffset(
+      //   "Printer not connected.",
+      //   ToastAndroid.SHORT,
+      //   ToastAndroid.CENTER,
+      //   25,
+      //   50,
+      // )
+    }
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <CustomHeader />
@@ -115,7 +219,7 @@ const MiniStatementInner = ({ route }) => {
           margin: 20,
           borderRadius: 10,
         }}>
-        <Text style={styles.todayCollection}>Mini Statement</Text>
+        <Text style={styles.todayCollection}>Date Wise Collection Summary</Text>
         <View style={styles.dateWrapper}>
           <TouchableOpacity
             onPress={() => setShowModal(true)}
@@ -167,20 +271,10 @@ const MiniStatementInner = ({ route }) => {
             </View>
           </Modal>
         </View>
-        <View>
-          <Table
-            borderStyle={{
-              borderWidth: 2,
-              borderColor: COLORS.lightScheme.secondary,
-              borderRadius: 10,
-            }}
-            style={{ backgroundColor: COLORS.lightScheme.background }}>
-            <Row
-              data={accountDetailsTable}
-              textStyle={styles.accountDetailsStyle}
-            />
-          </Table>
-        </View>
+        {/* <View style={{justifyContent: "space-around", flexDirection: "row", backgroundColor: "coral", padding: 10, margin: 10, borderRadius: 10}}>
+            <Text style={{ fontSize: 15, fontWeight: 500, color: COLORS.lightScheme.onPrimary, fontWeight: "bold" }}>From: {startDate}</Text>
+            <Text style={{ fontSize: 15, fontWeight: 500, color: COLORS.lightScheme.onPrimary, fontWeight: "bold" }}>To: {endDate}</Text>
+          </View> */}
         <View>
           <TouchableOpacity
             onPress={() => handleSubmit()}
@@ -197,19 +291,28 @@ const MiniStatementInner = ({ route }) => {
                 borderRadius: 10,
               }}
               style={{ backgroundColor: COLORS.lightScheme.background }}>
-              {/* <Col data={accountDetailsTable} textStyle={styles.accountDetailsStyle} /> */}
               <Row data={tableHead} textStyle={styles.head} />
               <Rows data={tableData} textStyle={styles.text} />
             </Table>
           )}
         </ScrollView>
-        <Text style={{ fontWeight: "bold" }}>Total Amount: {totalAmount}</Text>
+        <View>
+          <Text style={styles.footerText}>Total Receipts: {totalReceipts}</Text>
+          <Text style={styles.footerText}>Total Amount: {total}/-</Text>
+        </View>
+        <View>
+          <TouchableOpacity
+            onPress={() => printReceipt()}
+            style={styles.dateButton}>
+            <Text>Print</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   )
 }
 
-export default MiniStatementInner
+export default DateWiseCollSummary
 
 const styles = StyleSheet.create({
   dateWrapper: {
@@ -237,12 +340,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 10,
   },
-  accountDetailsStyle: {
-    margin: 6,
-    color: COLORS.lightScheme.primary,
-    fontWeight: "bold",
-    fontSize: 20,
-  },
   head: {
     margin: 6,
     color: COLORS.lightScheme.onBackground,
@@ -259,5 +356,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
+  },
+  footerText: {
+    fontSize: 15,
+    fontWeight: "600",
   },
 })

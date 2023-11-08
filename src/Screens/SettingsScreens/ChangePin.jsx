@@ -64,22 +64,35 @@ const ChangePin = () => {
           },
         })
         .then(res => {
-          ToastAndroid.showWithGravityAndOffset(
-            res.data.success,
-            ToastAndroid.SHORT,
-            ToastAndroid.CENTER,
-            25,
-            50,
-          )
-          changePasscode("")
-          setNewPassCode("")
-          setConfirmNewPasscode("")
-          logout()
+          if (res.data.status) {
+            ToastAndroid.showWithGravityAndOffset(
+              res.data.success,
+              ToastAndroid.SHORT,
+              ToastAndroid.CENTER,
+              25,
+              50,
+            )
+            changePasscode("")
+            setNewPassCode("")
+            setConfirmNewPasscode("")
+            logout()
+          } else {
+            ToastAndroid.showWithGravityAndOffset(
+              "Wrong Credentials...",
+              ToastAndroid.SHORT,
+              ToastAndroid.CENTER,
+              25,
+              50,
+            )
+            changePasscode("")
+            setNewPassCode("")
+            setConfirmNewPasscode("")
+          }
         })
         .catch(err => {
           console.log("CHANGE PINNN SCREENNNN", err)
           ToastAndroid.showWithGravityAndOffset(
-            err.response.data.error,
+            err.response.data,
             ToastAndroid.SHORT,
             ToastAndroid.CENTER,
             25,

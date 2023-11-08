@@ -44,7 +44,7 @@ const MiniStatement = ({ navigation }) => {
         },
       })
       .then(res => {
-        console.log("bank details", res.data.success.msg)
+        console.log("bank details", res.data)
         setUserBankDetails(res.data.success.msg)
       })
       .catch(err => {
