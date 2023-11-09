@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import {
   PixelRatio,
   ScrollView,
@@ -9,6 +9,7 @@ import {
   ToastAndroid,
   Modal,
 } from "react-native"
+import { BluetoothEscposPrinter } from "react-native-bluetooth-escpos-printer"
 import { AppStore } from "../../Context/AppContext"
 import CustomHeader from "../../Components/CustomHeader"
 import { COLORS, colors } from "../../Resources/colors"
@@ -17,9 +18,10 @@ import axios from "axios"
 import { REACT_APP_BASE_URL } from "../../Config/config"
 import CalendarPicker from "react-native-calendar-picker"
 import { address } from "../../Routes/addresses"
+import { removeIndexes } from "../../Functions/removeIndexes"
 
 const ReportDay = () => {
-  const { userId, bankId, branchCode } = useContext(AppStore)
+  const { userId, bankId, branchCode, agentName, bankName, branchName } = useContext(AppStore)
 
   // const [startingDate, setStartingDate] = useState(() => "From Date") // date in yyyy-mm-dd
   // const [endingDate, setEndingDate] = useState(() => "To Date") // date in yyyy-mm-dd
@@ -105,7 +107,7 @@ const ReportDay = () => {
         res.data.success.msg.forEach((item, i) => {
           let rowArr = [
             i + 1,
-            new Date(item.date).toLocaleDateString("en-GB"),
+            new Date(item.date).toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"}),
             item.account_type == "D"
               ? "Daily"
               : item.account_type == "R"
@@ -120,8 +122,10 @@ const ReportDay = () => {
           totalDepositedAmount += item.deposit_amount
           console.log("ITEMMM TABLEEE=====", rowArr)
           tableData.push(...[rowArr])
-        })
+          // printReceipt(item.date, startDate, endDate, item.account_number, item.account_holder_name, item.deposit_amount)
 
+        })
+        
         setTotalAmount(totalDepositedAmount)
         console.log("++++++ TABLE DATA ++++++++", tableData)
         setDayScrollReportArray(tableData)
@@ -137,6 +141,123 @@ const ReportDay = () => {
         console.log(err)
       })
   }
+
+
+
+  async function printReceipt() {
+    try {
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.CENTER,
+      )
+      await BluetoothEscposPrinter.printText(bankName, { align: "center" })
+      await BluetoothEscposPrinter.printText("\r\n", {})
+      await BluetoothEscposPrinter.printText(branchName, { align: "center" })
+      await BluetoothEscposPrinter.printText("\r\n", {})
+      await BluetoothEscposPrinter.printColumn(
+        [8, 10, 10],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["Date", ":", new Date().toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"}).toString()],
+        {},
+      )
+      await BluetoothEscposPrinter.printColumn(
+        [8, 10, 12],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["Agent", ":", agentName],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText("DAY SCROLL REPORT\r\n", {
+        align: "center",
+      })
+
+      await BluetoothEscposPrinter.printText(`FROM: ${new Date(startDate).toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"})}  TO: ${new Date(endDate).toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"})}`, {
+        align: "center",
+      })
+
+      await BluetoothEscposPrinter.printText("\r", {})
+
+      // await BluetoothEscposPrinter.printPic(logo, { width: 300, align: "center", left: 30 })
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------",
+        {},
+      )
+      await BluetoothEscposPrinter.printText("\r\n", {})
+
+      let columnWidthsHeader = [10, 10, 10]
+      await BluetoothEscposPrinter.printColumn(
+        columnWidthsHeader,
+        [
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+        ],
+        ["Date", "A/c No", "Amt"],
+        {},
+      )
+
+      const copiedTableData = [...tableData]
+      console.log("TABLLLELEEEEE DDDAAATAAAA  CPPPYYY ", copiedTableData)
+
+      let columnWidthsBody = [30]
+      copiedTableData.forEach(async item => {
+        let newItems = [...item]
+        console.log("new itemsssssss", newItems)
+        const updatedItems = removeIndexes(newItems, [0, 2, 4])
+
+        // updatedItems[2] = updatedItems[2].slice(0, 8)
+        let items = updatedItems.join("   ")
+        console.log("++==++ PRINTED ITEM", items)
+        await BluetoothEscposPrinter.printColumn(
+          columnWidthsBody,
+          [BluetoothEscposPrinter.ALIGN.CENTER],
+          [items.toString()],
+          {},
+        )
+      })
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------\n",
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText(`TOTAL AMOUNT: ${totalAmount}\r\n`, {
+        align: "center",
+      })
+      // await BluetoothEscposPrinter.printText("Total Receipts: " + totalReceipts + "\n", { align: "center" })
+      // await BluetoothEscposPrinter.printText("Total Amount: " + total + "\n", { align: "center" })
+      await BluetoothEscposPrinter.printText(
+        "---------------X---------------",
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
+    } catch (e) {
+      console.log(e.message || "ERROR")
+      ToastAndroid.showWithGravityAndOffset(
+        "Printer not connected.",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+        25,
+        50,
+      )
+    }
+  }
+
+
+
+  // useEffect(() => {
+  //   tableData = []
+  //   getReportsDayScroll()
+  // }, [selectedEndDate])
 
   const handleSubmit = () => {
     tableData = []
@@ -255,6 +376,11 @@ const ReportDay = () => {
           )}
         </ScrollView>
         <Text>Total Amount: {totalAmount}</Text>
+        <TouchableOpacity
+            onPress={() => printReceipt()}
+            style={styles.dateButton}>
+            <Text>PRINT</Text>
+          </TouchableOpacity>
       </View>
     </View>
   )

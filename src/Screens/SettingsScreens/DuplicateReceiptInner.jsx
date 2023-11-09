@@ -28,7 +28,6 @@ const DuplicateReceiptInner = ({ route }) => {
     useContext(AppStore)
 
   const [duplicateReceipts, setDuplicateReceipts] = useState(() => [])
-  const [totalAmount, setTotalAmount] = useState(() => 0)
 
   const [loading, setLoading] = useState(() => true)
 
