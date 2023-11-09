@@ -18,6 +18,8 @@ const mainNavigationRoutes = {
   dateWiseCollSummary: "DateWiseCollSummary",
   reportChooseScreen: "ReportChooseScreen",
   printerConnectScreen: "PrinterConnectScreen",
+  duplicateReceipt: "DuplicateReceipt",
+  duplicateReceiptInner: "DuplicateReceiptInnner",
   notificationScreen: "NotificationScreen",
 }
 

@@ -78,6 +78,27 @@ const SettingScreen = ({ navigation }) => {
           {/* label */}
           <Text style={styles.label}> Printer Connect </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(mainNavigationRoutes.duplicateReceipt)
+          }
+          style={styles.cardContainer}>
+          {/* Icon */}
+          {icon.printer(COLORS.lightScheme.primary, 45)}
+
+          {/* label */}
+          <Text style={styles.label}>Duplicate Receipt</Text>
+        </TouchableOpacity>
+
+        <View
+          style={{
+            ...styles.cardContainer,
+            backgroundColor: COLORS.lightScheme.surfaceVarient,
+            elevation: 0,
+          }}>
+          {/* Blank Card */}
+        </View>
       </View>
     </>
   )
@@ -106,6 +127,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   label: {
+    textAlign: "center",
     color: COLORS.lightScheme.onSurface,
     padding: 10,
     fontSize: PixelRatio.roundToNearestPixel(18),

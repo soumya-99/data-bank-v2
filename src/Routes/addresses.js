@@ -14,5 +14,6 @@ export const address = {
     TYPE_WISE_REPORT: `${REACT_APP_BASE_URL}/user/type_wise_report`,
     NON_COLLECTON_REPORT: `${REACT_APP_BASE_URL}/user/non_collection_report`,
     MINI_STATEMENT: `${REACT_APP_BASE_URL}/user/date_wise_mini_statement`,
+    DUPLICATE_RECEIPT: `${REACT_APP_BASE_URL}/user/account_wise_scroll_report`,
     DATE_WISE_COLL_SUMMARY: `${REACT_APP_BASE_URL}/user/date_wise_summary`
 }

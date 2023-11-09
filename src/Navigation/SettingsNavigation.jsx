@@ -14,6 +14,8 @@ import NonCollection from "../Screens/SettingsScreens/NonCollection"
 import MiniStatement from "../Screens/SettingsScreens/MiniStatement"
 import MiniStatementInner from "../Screens/SettingsScreens/MiniStatementInner"
 import DateWiseCollSummary from "../Screens/SettingsScreens/DateWiseCollSummary"
+import DuplicateReceipt from "../Screens/SettingsScreens/DuplicateReceipt"
+import DuplicateReceiptInner from "../Screens/SettingsScreens/DuplicateReceiptInner"
 
 const Stack = createNativeStackNavigator()
 
@@ -78,6 +80,16 @@ const SettingsNavigation = () => {
         <Stack.Screen
           name={mainNavigationRoutes.printerConnectScreen}
           component={PrintMain}
+        />
+
+        <Stack.Screen
+          name={mainNavigationRoutes.duplicateReceipt}
+          component={DuplicateReceipt}
+        />
+
+        <Stack.Screen
+          name={mainNavigationRoutes.duplicateReceiptInner}
+          component={DuplicateReceiptInner}
         />
 
         <Stack.Screen
