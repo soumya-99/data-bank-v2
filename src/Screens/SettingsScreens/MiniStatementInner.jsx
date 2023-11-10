@@ -9,6 +9,7 @@ import {
   ToastAndroid,
   Modal,
 } from "react-native"
+import { BluetoothEscposPrinter } from "react-native-bluetooth-escpos-printer"
 import { AppStore } from "../../Context/AppContext"
 import CustomHeader from "../../Components/CustomHeader"
 import { COLORS } from "../../Resources/colors"
@@ -16,11 +17,12 @@ import { Table, Rows, Row, Col } from "react-native-table-component"
 import axios from "axios"
 import CalendarPicker from "react-native-calendar-picker"
 import { address } from "../../Routes/addresses"
+import { removeIndexes } from "../../Functions/removeIndexes"
 
 const MiniStatementInner = ({ route }) => {
   const { item } = route.params
 
-  const { userId, bankId, branchCode } = useContext(AppStore)
+  const { userId, bankId, branchCode, bankName, branchName, agentName } = useContext(AppStore)
 
   const [selectedStartDate, setSelectedStartDate] = useState(() => new Date())
   const [selectedEndDate, setSelectedEndDate] = useState(() => new Date())
@@ -97,6 +99,143 @@ const MiniStatementInner = ({ route }) => {
         console.log(err)
       })
   }
+
+
+  async function printReceipt() {
+    try {
+      await BluetoothEscposPrinter.printerAlign(
+        BluetoothEscposPrinter.ALIGN.CENTER,
+      )
+      await BluetoothEscposPrinter.printText(bankName, { align: "center" })
+      await BluetoothEscposPrinter.printText("\r\n", {})
+      await BluetoothEscposPrinter.printText(branchName, { align: "center" })
+      await BluetoothEscposPrinter.printText("\r\n", {})
+      await BluetoothEscposPrinter.printColumn(
+        [10, 2, 18],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["Date", ":", new Date().toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"}).toString()],
+        {},
+      )
+      await BluetoothEscposPrinter.printColumn(
+        [10, 2, 18],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["Agent", ":", agentName],
+        {},
+      )
+      await BluetoothEscposPrinter.printColumn(
+        [10, 2, 18],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["Cus Name", ":", item.customer_name],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printColumn(
+        [10, 2, 18],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["Acc No", ":", item.account_number],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------\n",
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText("MINI STATEMENT\n", {
+        align: "center",
+      })
+      
+
+      // await BluetoothEscposPrinter.printText(`FROM: ${new Date(startDate).toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"})}  TO: ${new Date(endDate).toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"})}`, {
+      //   align: "center",
+      // })
+
+      await BluetoothEscposPrinter.printText("\r", {})
+
+      // await BluetoothEscposPrinter.printPic(logo, { width: 300, align: "center", left: 30 })
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------",
+        {},
+      )
+      await BluetoothEscposPrinter.printText("\r\n", {})
+
+      let columnWidthsHeader = [10, 10, 10]
+      await BluetoothEscposPrinter.printColumn(
+        columnWidthsHeader,
+        [
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+        ],
+        ["Date", "Coll Amt", "Cls Bal"],
+        {},
+      )
+
+      const copiedTableData = [...tableData]
+      console.log("TABLLLELEEEEE DDDAAATAAAA  CPPPYYY ", copiedTableData)
+
+      let columnWidthsBody = [30]
+      copiedTableData.forEach(async item => {
+        let newItems = [...item]
+        console.log("new itemsssssss", newItems)
+        const updatedItems = removeIndexes(newItems, [0])
+
+        // updatedItems[2] = updatedItems[2].slice(0, 8)
+        let items = updatedItems.join("     ")
+        console.log("++==++ PRINTED ITEM", items)
+        await BluetoothEscposPrinter.printColumn(
+          columnWidthsBody,
+          [BluetoothEscposPrinter.ALIGN.CENTER],
+          [items.toString()],
+          {},
+        )
+      })
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------\n",
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText(`TOTAL AMOUNT: ${totalAmount}\r\n`, {
+        align: "center",
+      })
+      // await BluetoothEscposPrinter.printText("Total Receipts: " + totalReceipts + "\n", { align: "center" })
+      // await BluetoothEscposPrinter.printText("Total Amount: " + total + "\n", { align: "center" })
+      await BluetoothEscposPrinter.printText(
+        "---------------X---------------",
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {})
+    } catch (e) {
+      console.log(e.message || "ERROR")
+      ToastAndroid.showWithGravityAndOffset(
+        "Printer not connected.",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+        25,
+        50,
+      )
+    }
+  }
+
 
   const handleSubmit = () => {
     tableData = []
@@ -204,6 +343,11 @@ const MiniStatementInner = ({ route }) => {
           )}
         </ScrollView>
         <Text style={{ fontWeight: "bold" }}>Total Amount: {totalAmount}</Text>
+        <TouchableOpacity
+            onPress={() => printReceipt()}
+            style={styles.dateButton}>
+            <Text>PRINT</Text>
+          </TouchableOpacity>
       </View>
     </View>
   )

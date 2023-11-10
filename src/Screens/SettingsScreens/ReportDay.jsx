@@ -154,7 +154,7 @@ const ReportDay = () => {
       await BluetoothEscposPrinter.printText(branchName, { align: "center" })
       await BluetoothEscposPrinter.printText("\r\n", {})
       await BluetoothEscposPrinter.printColumn(
-        [8, 10, 10],
+        [10, 2, 18],
         [
           BluetoothEscposPrinter.ALIGN.LEFT,
           BluetoothEscposPrinter.ALIGN.CENTER,
@@ -164,13 +164,18 @@ const ReportDay = () => {
         {},
       )
       await BluetoothEscposPrinter.printColumn(
-        [8, 10, 12],
+        [10, 2, 18],
         [
           BluetoothEscposPrinter.ALIGN.LEFT,
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
         ["Agent", ":", agentName],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------\n",
         {},
       )
 

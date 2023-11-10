@@ -144,6 +144,22 @@ const DateWiseCollSummary = () => {
       await BluetoothEscposPrinter.printText(branchName, { align: "center" })
       await BluetoothEscposPrinter.printText("\r\n", {})
 
+      await BluetoothEscposPrinter.printColumn(
+        [10, 2, 18],
+        [
+          BluetoothEscposPrinter.ALIGN.LEFT,
+          BluetoothEscposPrinter.ALIGN.CENTER,
+          BluetoothEscposPrinter.ALIGN.RIGHT,
+        ],
+        ["Date", ":", new Date().toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"}).toString()],
+        {},
+      )
+
+      await BluetoothEscposPrinter.printText(
+        "-------------------------------\n",
+        {},
+      )
+
       await BluetoothEscposPrinter.printText("SUMMARY REPORT", {
         align: "center",
       })
