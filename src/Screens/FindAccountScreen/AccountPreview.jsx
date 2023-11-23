@@ -331,12 +331,13 @@ const AccountPreview = ({ navigation, route }) => {
       console.log("##$$$$###$$$", maximumAmount * allowCollectionDays)
       console.log("##$$$$+++++###$$$", parseFloat(money) + totalDepositedAmount)
       if (
-        maximumAmount * allowCollectionDays >
+        maximumAmount * allowCollectionDays >=
         parseFloat(money) + totalDepositedAmount
       ) {
         console.log("MMMMMMMMMMMMMMMM")
         setIsSaveEnabled(true)
         sendCollectedMoney()
+        maximumAmount -= money
       } // M
       else {
         ToastAndroid.showWithGravityAndOffset(
