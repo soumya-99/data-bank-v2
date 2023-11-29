@@ -37,7 +37,7 @@ const EndWorkScreen = ({ navigation }) => {
     ["Agent Name", agentName],
     ["Branch Code", branchCode],
     ["Max Collection", maximumAmount],
-    ["Today Collection", totalCollection],
+    ["Total Collection", totalCollection],
     ["Remaing Collection", maximumAmount - totalCollection],
   ]
 
@@ -60,15 +60,21 @@ const EndWorkScreen = ({ navigation }) => {
       })
       .then(res => {
         // console.log("###### Preview: ", res.data)
-        alert("Your work has been submitted.")
-        ToastAndroid.showWithGravityAndOffset(
-          "Your work has been submitted.",
-          ToastAndroid.SHORT,
-          ToastAndroid.CENTER,
-          25,
-          50,
-        )
-        setIsButtonEnabled(!isButtonEnabled)
+        if (res.data.status) {
+          alert("Your work has been submitted.")
+          ToastAndroid.showWithGravityAndOffset(
+            "Your work has been submitted.",
+            ToastAndroid.SHORT,
+            ToastAndroid.CENTER,
+            25,
+            50,
+          )
+          setIsButtonEnabled(!isButtonEnabled)
+          console.log("IF dshjklfhskdfuihsdk vtbstgubkui", res.data)
+        } else {
+          alert("No collection has been done yet.")
+          console.log("FI dshjklfhskdfuihsdk vtbstgubkui", res.data)
+        }
       })
       .catch(err => {
         console.log("############", err)

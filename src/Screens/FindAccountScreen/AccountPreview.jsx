@@ -6,6 +6,7 @@ import {
   Modal,
   Pressable,
   ToastAndroid,
+  Dimensions,
 } from "react-native"
 import { useContext, useEffect, useState } from "react"
 import { COLORS, colors } from "../../Resources/colors"
@@ -330,6 +331,9 @@ const AccountPreview = ({ navigation, route }) => {
       console.log("TTTTTYYYYYPPPPPEEEEE", allowCollectionDays)
       console.log("##$$$$###$$$", maximumAmount * allowCollectionDays)
       console.log("##$$$$+++++###$$$", parseFloat(money) + totalDepositedAmount)
+      console.log("##$$$$+++++###$$$ totalDepositedAmount", totalDepositedAmount)
+      console.log("##$$$$+++++###$$$ totalCollection", totalCollection)
+
       if (
         maximumAmount * allowCollectionDays >=
         parseFloat(money) + totalDepositedAmount
@@ -337,7 +341,8 @@ const AccountPreview = ({ navigation, route }) => {
         console.log("MMMMMMMMMMMMMMMM")
         setIsSaveEnabled(true)
         sendCollectedMoney()
-        maximumAmount -= money
+        // maximumAmount -= money
+        login()
       } // M
       else {
         ToastAndroid.showWithGravityAndOffset(
@@ -351,15 +356,20 @@ const AccountPreview = ({ navigation, route }) => {
     } else if (secAmtType == "A") {
       console.log("AAAAAAAAAAAAAAAAAA")
 
-      console.log("TTTTTYYYYYPPPPPEEEEE", maximumAmount)
-      console.log("TTTTTYYYYYPPPPPEEEEE", allowCollectionDays)
-      console.log("##$$$$###$$$", maximumAmount * allowCollectionDays)
-      console.log("##$$$$+++++###$$$", parseFloat(money) + totalDepositedAmount)
+      console.log("TTTTTYYYYYPPPPPEEEEE maximumAmount", maximumAmount)
+      console.log("TTTTTYYYYYPPPPPEEEEE allowCollectionDays", allowCollectionDays)
+      console.log("##$$$$###$$ maximumAmount * allowCollectionDays", maximumAmount * allowCollectionDays)
+      console.log("##$$$$+++++###$$$ (money) + totalDepositedAmount", parseFloat(money) + totalDepositedAmount)
+
+      console.log("##$$$$+++++###$$$ totalDepositedAmount", totalDepositedAmount)
+      console.log("##$$$$+++++###$$$ totalCollection", totalCollection)
 
 
-      if (maximumAmount > parseFloat(money) + totalDepositedAmount) {
+      if (maximumAmount >= (parseFloat(money) + totalCollection)) {
         setIsSaveEnabled(true)
         sendCollectedMoney()
+        // maximumAmount -= money
+        login()
       } // A
       else {
         ToastAndroid.showWithGravityAndOffset(
@@ -386,13 +396,13 @@ const AccountPreview = ({ navigation, route }) => {
   return (
     <View>
       <CustomHeader />
-      <View
+      <ScrollView
         style={{
           backgroundColor: COLORS.lightScheme.background,
-          height: "100%",
+          height: "90%",
           padding: 10,
         }}>
-        <ScrollView>
+        {/* <ScrollView> */}
           <Text style={styles.info}>Preview</Text>
           {/* Table Component */}
           <View style={styles.tableConatiner}>
@@ -453,8 +463,8 @@ const AccountPreview = ({ navigation, route }) => {
               />
             </View>
           </View>
-        </ScrollView>
-      </View>
+        {/* </ScrollView> */}
+      </ScrollView>
     </View>
   )
 }
