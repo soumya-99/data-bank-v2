@@ -91,6 +91,16 @@ const SettingScreen = ({ navigation }) => {
           <Text style={styles.label}>Duplicate Receipt</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          onPress={() => navigation.navigate(mainNavigationRoutes.aboutScreen)}
+          style={styles.cardContainer}>
+          {/* Icon */}
+          {icon.info(COLORS.lightScheme.primary, 45)}
+
+          {/* label */}
+          <Text style={styles.label}>About</Text>
+        </TouchableOpacity>
+
         <View
           style={{
             ...styles.cardContainer,

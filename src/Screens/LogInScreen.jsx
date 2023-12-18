@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   ToastAndroid,
+  Alert,
+  Linking,
 } from "react-native"
 import { useState, useEffect, useContext, useCallback } from "react"
 import { COLORS, colors } from "../Resources/colors"
@@ -17,6 +19,9 @@ import { AppStore } from "../Context/AppContext"
 import SmoothPinCodeInput from "react-native-smooth-pincode-input"
 import HeaderImage from "../Resources/Images/logo_cut.png"
 import { useFocusEffect } from "@react-navigation/native"
+import DeviceInfo from "react-native-device-info"
+import axios from "axios"
+import { address } from "../Routes/addresses"
 
 const LogInScreen = ({ navigation }) => {
   const {
@@ -32,6 +37,10 @@ const LogInScreen = ({ navigation }) => {
     next,
     setNext,
   } = useContext(AppStore)
+
+  const [latestAppVersion, setLatestAppVersion] = useState("")
+  const [appDownloadLink, setAppDownloadLink] = useState("")
+  const [updateStatus, setUpdateStatus] = useState("")
 
   useEffect(() => {
     console.log(passcode)
@@ -52,9 +61,61 @@ const LogInScreen = ({ navigation }) => {
     }
   }
 
+  let version = DeviceInfo.getVersion()
+
+  const [latestMajor, latestMinor, latestPatch] = latestAppVersion
+    .split(".")
+    .map(s => parseInt(s, 10))
+  const [currentMajor, currentMinor, currentPatch] = version
+    .split(".")
+    .map(s => parseInt(s, 10))
+
+  const getVersionFromWeb = async () => {
+    await axios
+      .post(
+        address.GET_VERSION_DETAILS,
+        { app_version: version },
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        },
+      )
+      .then(res => {
+        setLatestAppVersion(res.data.data.app_version)
+        setAppDownloadLink(res.data.data.app_download_link)
+        console.log(
+          "fsdadgtreyhgtdhyrfujfyudx",
+          res.data.data.app_download_link,
+        )
+        setUpdateStatus(res.data.update_status)
+
+        if (res.data.update_status == "Y") {
+          showAlertUpdate(res.data.data.app_download_link)
+        }
+      })
+  }
+
   useEffect(() => {
     getUserId()
+    getVersionFromWeb()
+
+    if (updateStatus == "Y") {
+      showAlertUpdate()
+    }
   }, [])
+
+  console.log("skahlrcnsfytkuwhnf ", version)
+  console.log("skahlrcnsfytkuwhnf ", latestAppVersion)
+  console.log("skahlrcnsfytkuwhnf ", updateStatus)
+
+  function showAlertUpdate(link) {
+    Alert.alert("Found Update!", "Update your app immediately.", [
+      { text: "Download", onPress: () => Linking.openURL(link) },
+    ])
+  }
+
+  // 1 3 0 ========= 1 1 0
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.lightScheme.background }}>
@@ -102,11 +163,24 @@ const LogInScreen = ({ navigation }) => {
 
               <View style={styles.buttonContainer}>
                 <ButtonComponent
+                  disabled={updateStatus == "Y" ? true : false}
                   title={"Next"}
                   handleOnpress={() => handlePressOnFirstScreen()}
                   customStyle={{ width: "80%" }}
                 />
               </View>
+
+              {/* {updateStatus && (
+                <View style={styles.buttonContainer}>
+                  <ButtonComponent
+                    title={"Download Update"}
+                    handleOnpress={() => {
+                      showAlertUpdate()
+                    }}
+                    customStyle={{ width: "80%" }}
+                  />
+                </View>
+              )} */}
             </View>
           )}
 

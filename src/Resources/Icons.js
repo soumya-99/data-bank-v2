@@ -36,6 +36,9 @@ const password = (color = colors.black, size = 25) => (
 const report = (color = colors.black, size = 25) => (
   <MaterialIcons name="report" color={color} size={size} />
 )
+const info = (color = colors.black, size = 25) => (
+  <MaterialIcons name="info" color={color} size={size} />
+)
 
 const printer = (color = colors.black, size = 25) => (
   <AntDesign name={"printer"} color={color} size={size} />
@@ -52,4 +55,5 @@ export const icon = {
   password,
   report,
   printer,
+  info,
 }

@@ -59,9 +59,9 @@ const AccountDetails = ({ navigation, route }) => {
   }, [])
 
   const handlePreviewData = () => {
-    if (!collectionMoney || collectionMoney == 0) {
+    if (!collectionMoney || collectionMoney <= 0) {
       ToastAndroid.showWithGravityAndOffset(
-        "Please Add Some Ammount",
+        "Invalid Ammount",
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
         25,

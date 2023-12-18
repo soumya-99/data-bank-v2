@@ -16,6 +16,7 @@ import MiniStatementInner from "../Screens/SettingsScreens/MiniStatementInner"
 import DateWiseCollSummary from "../Screens/SettingsScreens/DateWiseCollSummary"
 import DuplicateReceipt from "../Screens/SettingsScreens/DuplicateReceipt"
 import DuplicateReceiptInner from "../Screens/SettingsScreens/DuplicateReceiptInner"
+import About from "../Screens/SettingsScreens/About"
 
 const Stack = createNativeStackNavigator()
 
@@ -95,6 +96,11 @@ const SettingsNavigation = () => {
         <Stack.Screen
           name={mainNavigationRoutes.notificationScreen}
           component={NotificationScreen}
+        />
+
+        <Stack.Screen
+          name={mainNavigationRoutes.aboutScreen}
+          component={About}
         />
       </Stack.Navigator>
     </>
