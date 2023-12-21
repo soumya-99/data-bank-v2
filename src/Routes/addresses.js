@@ -17,4 +17,5 @@ export const address = {
   DUPLICATE_RECEIPT: `${REACT_APP_BASE_URL}/user/account_wise_scroll_report`,
   DATE_WISE_COLL_SUMMARY: `${REACT_APP_BASE_URL}/user/date_wise_summary`,
   GET_VERSION_DETAILS: `${REACT_APP_BASE_URL}/user/app_version`,
+  LAST_FIVE_TRANSACTIONS: `${REACT_APP_BASE_URL}/user/last_five_transaction`,
 }

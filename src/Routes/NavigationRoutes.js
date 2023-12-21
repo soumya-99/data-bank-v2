@@ -22,6 +22,7 @@ const mainNavigationRoutes = {
   duplicateReceiptInner: "DuplicateReceiptInnner",
   notificationScreen: "NotificationScreen",
   aboutScreen: "AboutScreen",
+  lastFiveTnxScreen: "LastFiveTnxScreen",
 }
 
 export default mainNavigationRoutes

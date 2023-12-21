@@ -99,10 +99,6 @@ const LogInScreen = ({ navigation }) => {
   useEffect(() => {
     getUserId()
     getVersionFromWeb()
-
-    if (updateStatus == "Y") {
-      showAlertUpdate()
-    }
   }, [])
 
   console.log("skahlrcnsfytkuwhnf ", version)
@@ -110,7 +106,7 @@ const LogInScreen = ({ navigation }) => {
   console.log("skahlrcnsfytkuwhnf ", updateStatus)
 
   function showAlertUpdate(link) {
-    Alert.alert("Found Update!", "Update your app immediately.", [
+    Alert.alert("Found Update!", "Please update your app.", [
       { text: "Download", onPress: () => Linking.openURL(link) },
     ])
   }

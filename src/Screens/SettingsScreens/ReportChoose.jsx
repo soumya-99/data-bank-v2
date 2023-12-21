@@ -75,6 +75,18 @@ export default function ReportChoose({ navigation }) {
           <Text style={styles.label}> Date Wise Coll Summary </Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(mainNavigationRoutes.lastFiveTnxScreen)
+          }
+          style={styles.cardContainer}>
+          {/* Icon */}
+          {icon.profile(COLORS.lightScheme.primary, 45)}
+
+          {/* label */}
+          <Text style={styles.label}> Last Five Tnx </Text>
+        </TouchableOpacity>
+
         <View
           style={{
             ...styles.cardContainer,
