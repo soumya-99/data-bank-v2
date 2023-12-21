@@ -176,7 +176,7 @@ const AccountPreview = ({ navigation, route }) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ["AGENT NAME", ":", agentName.toString()],
+        ["AGENT NAME", ":", agentName.substring(0, 12).toString()],
         {},
       )
 
@@ -235,7 +235,7 @@ const AccountPreview = ({ navigation, route }) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ["NAME", ":", (item?.customer_name).toString()],
+        ["NAME", ":", ((item?.customer_name).substring(0, 12)).toString()],
         {},
       )
 
