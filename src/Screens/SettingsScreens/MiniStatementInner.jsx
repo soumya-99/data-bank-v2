@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect } from "react"
 import {
   PixelRatio,
   ScrollView,
@@ -51,14 +51,30 @@ const MiniStatementInner = ({ route }) => {
   const accountDetailsTable = [[item?.customer_name], [item?.account_number]]
   let tableData = miniStatementArray
 
+
+
+  const dateFormatters = (dateData) => {
+    const originalDate = dateData;
+    const date = new Date(originalDate);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    const formattedDate = `${day}/${month}/${year}`;
+    console.log(formattedDate);
+    return formattedDate;
+  }
+
+
   const getMiniStatement = async () => {
     const obj = {
       bank_id: bankId,
       branch_code: branchCode,
       agent_code: userId,
       account_number: item?.account_number,
-      from_date: startDate,
-      to_date: endDate,
+      // from_date: startDate,
+      // to_date: endDate,
     }
     let totalDepositedAmount = 0
     await axios
@@ -68,6 +84,7 @@ const MiniStatementInner = ({ route }) => {
         },
       })
       .then(res => {
+        console.log(res.data.success.msg);
         res.data.success.msg.forEach((item, i) => {
           let rowArr = [
             i + 1,
@@ -76,10 +93,11 @@ const MiniStatementInner = ({ route }) => {
               month: "2-digit",
               year: "2-digit",
             }),
-            item.PAID_AMT,
-            item.BALANCE_AMT,
+            //dateFormatters(item.PAID_DT),
+            (item.PAID_AMT),
+            (item.BALANCE_AMT),
           ]
-          totalDepositedAmount += item.PAID_AMT
+          totalDepositedAmount += (item.PAID_AMT)
           console.log("ITEMMM TABLEEE=====", rowArr)
           tableData.push(...[rowArr])
         })
@@ -117,7 +135,7 @@ const MiniStatementInner = ({ route }) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ["Date", ":", new Date().toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"}).toString()],
+        ["Date", ":", new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "2-digit" }).toString()],
         {},
       )
       await BluetoothEscposPrinter.printColumn(
@@ -160,7 +178,7 @@ const MiniStatementInner = ({ route }) => {
       await BluetoothEscposPrinter.printText("MINI STATEMENT\n", {
         align: "center",
       })
-      
+
 
       // await BluetoothEscposPrinter.printText(`FROM: ${new Date(startDate).toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"})}  TO: ${new Date(endDate).toLocaleDateString("en-GB", {day: "2-digit", month: "2-digit", year: "2-digit"})}`, {
       //   align: "center",
@@ -236,11 +254,14 @@ const MiniStatementInner = ({ route }) => {
     }
   }
 
-
-  const handleSubmit = () => {
-    tableData = []
+  useEffect(() => {
     getMiniStatement()
-  }
+  }, [])
+
+  // const handleSubmit = () => {
+  //   tableData = []
+  //   getMiniStatement()
+  // }
 
   console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", tableData)
   return (
@@ -255,8 +276,8 @@ const MiniStatementInner = ({ route }) => {
           borderRadius: 10,
         }}>
         <Text style={styles.todayCollection}>Mini Statement</Text>
-        <View style={styles.dateWrapper}>
-          <TouchableOpacity
+        {/* <View style={styles.dateWrapper}> */}
+          {/* <TouchableOpacity
             onPress={() => setShowModal(true)}
             style={{
               justifyContent: "space-around",
@@ -269,7 +290,7 @@ const MiniStatementInner = ({ route }) => {
               width: "100%",
             }}>
             {/* <Text>Show Calendar</Text> */}
-            <Text
+           {/* <Text
               style={{
                 fontSize: 15,
                 fontWeight: 500,
@@ -287,8 +308,8 @@ const MiniStatementInner = ({ route }) => {
               }}>
               To: {new Date(endDate).toLocaleDateString("en-GB")}
             </Text>
-          </TouchableOpacity>
-          <Modal visible={showModal} animationType="fade">
+          </TouchableOpacity> */}
+          {/* <Modal visible={showModal} animationType="fade">
             <View
               style={{
                 flex: 1,
@@ -304,8 +325,8 @@ const MiniStatementInner = ({ route }) => {
                 onDateChange={onDateChange}
               />
             </View>
-          </Modal>
-        </View>
+          </Modal> */}
+        {/* </View> */}
         <View>
           <Table
             borderStyle={{
@@ -320,14 +341,14 @@ const MiniStatementInner = ({ route }) => {
             />
           </Table>
         </View>
-        <View>
+        {/* <View>
           <TouchableOpacity
             onPress={() => handleSubmit()}
             style={styles.dateButton}>
             <Text>SUBMIT</Text>
           </TouchableOpacity>
-        </View>
-        <ScrollView>
+        </View> */}
+        <ScrollView style={styles.scrollViewStyle}>
           {tableData && (
             <Table
               borderStyle={{
@@ -344,10 +365,10 @@ const MiniStatementInner = ({ route }) => {
         </ScrollView>
         <Text style={{ fontWeight: "bold" }}>Total Amount: {totalAmount}</Text>
         <TouchableOpacity
-            onPress={() => printReceipt()}
-            style={styles.dateButton}>
-            <Text>PRINT</Text>
-          </TouchableOpacity>
+          onPress={() => printReceipt()}
+          style={styles.dateButton}>
+          <Text>PRINT</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -361,7 +382,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     flexDirection: "row",
-    margin: 20,
+    margin: 0,
   },
   dateButton: {
     width: "40%",
@@ -404,4 +425,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
+
+  scrollViewStyle:{
+    marginTop: 15,
+  }
 })
